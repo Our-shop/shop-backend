@@ -39,4 +39,5 @@ git branch US-07
 6.2. *Git commit -m "US-07: add smth"*
 7. Push your working branch (e.g. US-07) into the repository:  
 *Git push origin US-07*
-8. Create pull request from branch US-07 to branch development with name "US-07".
+8. Create pull request from branch **US-07** to branch **development** with name "US-07".
+9. Ask your team member to check your work and merge pull request into **development** branch.
