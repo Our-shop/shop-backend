@@ -7,11 +7,11 @@ import { UserEntity } from './entities/user.entity';
 export class UsersService {
   constructor(private readonly userRepo: UserRepo) {}
 
-  async getAllUsers() {
+  async getAllUsers(): Promise<UserDto[]> {
     return await this.userRepo.getList();
   }
 
-  async getUserById(id: string): Promise<UserEntity> {
+  async getUserById(id: string): Promise<UserDto | string> {
     return await this.userRepo.getUser(id);
   }
 

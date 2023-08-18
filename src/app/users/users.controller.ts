@@ -18,12 +18,12 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  async getAllUsers() {
+  async getAllUsers(): Promise<UserDto[]> {
     return await this.usersService.getAllUsers();
   }
 
   @Get('/:userId')
-  async getUserById(@Param('userId') id: string) {
+  async getUserById(@Param('userId') id: string): Promise<UserDto | string> {
     return await this.usersService.getUserById(id);
   }
 
