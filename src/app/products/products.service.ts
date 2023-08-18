@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CharactersProfileRepo } from './repos/characters-profile.repo';
+import { ProductsRepo } from './repos/products.repo';
 
 @Injectable()
 export class ProductsService {
-  constructor(
-    private readonly repo_characters_profile: CharactersProfileRepo,
-  ) {}
+  constructor(private readonly productsRepo: ProductsRepo) {}
 }

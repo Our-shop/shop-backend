@@ -1,29 +1,27 @@
-import { Controller, Get, Post, Param, Query } from '@nestjs/common';
-import { CharactersService } from './characters.service';
-import { CharacterDto } from './dtos/character.dto';
+import { Controller, Get, Post, Param, Body } from '@nestjs/common';
+import { ProductsService } from './products.service';
+import { ProductDto } from './dtos/product.dto';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly charactersService: CharactersService) {}
+  constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  public async findAll(): Promise<CharacterDto[]> {
-    const entities = await this.charactersService.getAllCharacters();
-    const characters = CharacterDto.fromEntities(entities);
-    console.log('dddd');
-    return characters || [];
+  public async getProducts(): Promise<ProductDto[]> {
+    const entities = await this.productsService.getProducts();
+    const products = ProductDto.fromEntities(entities);
+    console.log('getProducts');
+
+    return products || [];
   }
 
   @Get(':id')
-  public async findOne(@Param('id') id: string) {
-    const entity = await this.charactersService.getOneCharacter(id);
-    const character = CharacterDto.fromEntity(entity);
-    return character || null;
+  public async getProductById(@Param('id') id: string) {
+    console.log('getProductById');
   }
 
-  @Post()
-  public async fillDB(): Promise<any> {
-    await this.charactersService.fillWithCharacters();
-    return [];
+  @Post(':id')
+  public async createProduct(@Body() dto: ProductDto) {
+    console.log('createProducts');
   }
 }
