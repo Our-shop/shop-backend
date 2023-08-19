@@ -7,6 +7,8 @@ import databaseConfig from './config/database.config';
 import appConfig from './config/app.config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ProductsModule } from './app/products/products.module';
+import { UsersModule } from './app/users/users.module';
+import { UserRolesModule } from './app/user-roles/user-roles.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { ProductsModule } from './app/products/products.module';
     EventEmitterModule.forRoot(),
     // ===== app =====
     ProductsModule,
+    UsersModule,
+    UserRolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
