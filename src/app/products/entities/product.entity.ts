@@ -5,11 +5,6 @@ import { BasicStatuses } from '../../../shared/enums/basic-statuses.enum';
 
 @Entity()
 export class ProductEntity extends BasicEntity {
-  constructor() {
-    super();
-    this.status = BasicStatuses.Active; // Set the default status
-  }
-
   @Property({ name: 'title' })
   title!: string;
 
@@ -32,7 +27,7 @@ export class ProductEntity extends BasicEntity {
   type!: string;
 
   @Property({ name: 'expiration_date', nullable: true })
-  expirationDate?: Date;
+  expirationDate?: string;
 
   @Property({ name: 'size', nullable: true })
   size?: string;

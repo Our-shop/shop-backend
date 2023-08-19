@@ -44,7 +44,7 @@ export class ProductDto extends BasicDto {
     description: 'Product(food) expiration date',
     required: false,
   })
-  expirationDate?: Date;
+  expirationDate?: string;
 
   @ApiProperty({
     description: 'Product(clothes) size',
@@ -62,8 +62,8 @@ export class ProductDto extends BasicDto {
     if (!entity) return;
     const it = new ProductDto();
     it.id = entity.id;
-    it.created = entity.created;
-    it.updated = entity.updated;
+    it.created = entity.created.valueOf();
+    it.updated = entity.updated.valueOf();
     it.status = entity.status;
     it.title = entity.title;
     it.price = entity.price;

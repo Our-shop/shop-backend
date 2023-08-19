@@ -10,12 +10,12 @@ export abstract class BasicDto {
   @ApiProperty({
     description: 'Date created',
   })
-  created!: Date;
+  created!: number;
 
   @ApiProperty({
     description: 'Date updated',
   })
-  updated!: Date;
+  updated!: number;
 
   @ApiProperty({
     description: 'User status',
