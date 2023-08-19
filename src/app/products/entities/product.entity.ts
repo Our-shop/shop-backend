@@ -1,7 +1,6 @@
 import { Entity, Property, Enum, OneToOne, PrimaryKey } from '@mikro-orm/core';
 import { BasicEntity } from '../../../shared/entities/basic.entity';
 import { ProductCategories } from '../enums/product-categories.enum';
-import { BasicStatuses } from '../../../shared/enums/basic-statuses.enum';
 
 @Entity()
 export class ProductEntity extends BasicEntity {
