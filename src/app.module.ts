@@ -6,7 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './config/database.config';
 import appConfig from './config/app.config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { UsersModule } from './app/users/users.module';
+import { ProductsModule } from './app/products/products.module';
 
 @Module({
   imports: [
@@ -21,7 +21,8 @@ import { UsersModule } from './app/users/users.module';
       inject: [ConfigService],
     }),
     EventEmitterModule.forRoot(),
-    UsersModule,
+    // ===== app =====
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
