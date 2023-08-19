@@ -1,24 +1,21 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { ApiRepo } from './repos/api.repo';
 import { ConfigModule } from '@nestjs/config';
-import { CharactersProfileRepo } from './repos/characters-profile.repo';
-import { CharactersProfileEntity } from './entities/charactersProfile.entity';
-import { ApiEntity } from './entities/api.entity';
-import { CharacterEntity } from './entities/product.entity';
+import { ProductEntity } from "./entities/product.entity";
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ProductsController } from "./products.controller";
 import { ProductsService } from "./products.service";
+import { ProductsRepo } from "./repos/products.repo";
 
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     MikroOrmModule.forFeature({
-      entities: [CharactersProfileEntity, CharacterEntity],
+      entities: [ProductEntity],
     }),
   ],
   controllers: [ProductsController],
-  providers: [ProductsService, ApiRepo, CharactersProfileRepo],
+  providers: [ProductsService, ProductsRepo],
 })
-export class CharactersModule {}
+export class ProductsModule {}

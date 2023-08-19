@@ -10,16 +10,17 @@ export abstract class BasicDto {
   @ApiProperty({
     description: 'Date created',
   })
-  created!: number;
+  created!: Date;
 
   @ApiProperty({
     description: 'Date updated',
   })
-  updated!: number;
+  updated!: Date;
 
   @ApiProperty({
-    description: 'Status',
+    description: 'User status',
     enum: BasicStatuses,
+    default: BasicStatuses.Active,
   })
   status: BasicStatuses;
 }

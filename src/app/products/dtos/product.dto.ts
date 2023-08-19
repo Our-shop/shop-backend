@@ -44,7 +44,7 @@ export class ProductDto extends BasicDto {
     description: 'Product(food) expiration date',
     required: false,
   })
-  expirationDate?: number;
+  expirationDate?: Date;
 
   @ApiProperty({
     description: 'Product(clothes) size',
@@ -58,12 +58,13 @@ export class ProductDto extends BasicDto {
   })
   recommendedAge?: number;
 
-  static fromEntity(entity?: ProductEntity) {
+  static fromEntity(entity?: ProductEntity): ProductDto {
     if (!entity) return;
     const it = new ProductDto();
     it.id = entity.id;
-    it.created = entity.created.valueOf();
-    it.updated = entity.updated.valueOf();
+    it.created = entity.created;
+    it.updated = entity.updated;
+    it.status = entity.status;
     it.title = entity.title;
     it.price = entity.price;
     it.description = entity.description;
@@ -71,14 +72,14 @@ export class ProductDto extends BasicDto {
     it.quantity = entity.quantity;
     it.category = entity.category;
     it.type = entity.type;
-    it.expirationDate = entity.expirationDate.valueOf();
+    it.expirationDate = entity.expirationDate;
     it.size = entity.size;
     it.recommendedAge = entity.recommendedAge;
 
     return it;
   }
 
-  static fromEntities(entities?: ProductEntity[]) {
+  static fromEntities(entities?: ProductEntity[]): ProductDto[] {
     if (!entities?.map) return;
     return entities.map((entity) => this.fromEntity(entity));
   }

@@ -14,9 +14,9 @@ export abstract class BasicEntity {
   updated: Date = new Date();
 
   @Enum({
-    items: () => BasicStatuses,
+    name: 'status',
     default: BasicStatuses.Active,
-    array: false,
+    items: () => BasicStatuses,
   })
-  status: BasicStatuses;
+  status!: BasicStatuses;
 }

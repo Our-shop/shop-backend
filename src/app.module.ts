@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './config/database.config';
 import appConfig from './config/app.config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ProductsModule } from './app/products/products.module';
 
 @Module({
   imports: [
@@ -20,6 +21,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       inject: [ConfigService],
     }),
     EventEmitterModule.forRoot(),
+    // APP MODULES
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
