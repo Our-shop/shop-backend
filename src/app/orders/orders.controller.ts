@@ -9,6 +9,8 @@ import {OrderEntity} from './entities/order.entity';
 export class OrdersController {
     constructor(private readonly ordersService: OrdersService) {}
 
+    // TODO: Get Orders by User ID (take User Id from Delivery)
+
     @ApiOperation({ summary: 'Get all orders' })
     @Get()
     async getAllOrders(): Promise<OrderDto[]> {
