@@ -10,6 +10,7 @@ import { ProductsModule } from './app/products/products.module';
 import { UsersModule } from './app/users/users.module';
 import { UserRolesModule } from './app/user-roles/user-roles.module';
 import { OrdersModule } from './app/orders/orders.module';
+import { OrderItemsModule } from './app/order-items/order-items.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { OrdersModule } from './app/orders/orders.module';
     UsersModule,
     UserRolesModule,
     OrdersModule,
+    OrderItemsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -13,6 +13,11 @@ export class OrderDto extends BasicDto {
     })
     deliveryId!: string;
 
+    @ApiProperty({
+        description: 'User id',
+    })
+    userId!: string;
+
     static fromEntity(entity?: OrderEntity) {
         if (!entity) {
             return;
@@ -23,6 +28,7 @@ export class OrderDto extends BasicDto {
         it.updated = entity.updated.valueOf();
         it.status = entity.status;
         it.deliveryId = entity.deliveryId;
+        it.userId = entity.userId;
         it.totalAmount = entity.totalAmount;
 
         return it;
