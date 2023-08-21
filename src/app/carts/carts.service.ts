@@ -18,11 +18,11 @@ export class CartsService {
     return CartDto.fromEntity(entities) || null;
   }
 
-  public async editDiscount(
+  public async editCartDiscount(
     cartId: string,
     discount: number,
   ): Promise<CartDto> {
-    const entity = await this.cartsRepo.editDiscount(cartId, discount);
+    const entity = await this.cartsRepo.editCartDiscount(cartId, discount);
 
     return CartDto.fromEntity(entity) || null;
   }

@@ -17,16 +17,20 @@ export class CartsRepo extends EntityRepository<CartEntity> {
     return await this.findOne({ id });
   }
 
-  public async addOne(discount: number): Promise<CartEntity> {
+  public async addOne(userId: string): Promise<CartEntity> {
     const newCart = await this.create({
-      discount: discount,
+      id: userId,
+      discount: 10,
     });
     await this.entityManager.persistAndFlush(newCart);
 
     return newCart;
   }
 
-  public async editDiscount(id: string, discount: number): Promise<CartEntity> {
+  public async editCartDiscount(
+    id: string,
+    discount: number,
+  ): Promise<CartEntity> {
     const cartToEdit = await this.findOne({ id });
     cartToEdit.discount = discount;
     await this.entityManager.persistAndFlush(cartToEdit);

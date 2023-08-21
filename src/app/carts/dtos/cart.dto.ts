@@ -6,7 +6,7 @@ export class CartDto extends BasicDto {
   @ApiProperty({
     description: 'Cart discount',
   })
-  discount!: string;
+  discount!: number;
 
   static fromEntity(entity?: CartEntity): CartDto {
     if (!entity) return;
@@ -15,6 +15,7 @@ export class CartDto extends BasicDto {
     it.created = entity.created.valueOf();
     it.updated = entity.updated.valueOf();
     it.status = entity.status;
+    it.discount = entity.discount;
 
     return it;
   }

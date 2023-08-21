@@ -2,10 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { UserRepo } from './repos/user.repo';
 import { UserDto } from './dtos/user.dto';
 import { UserEntity } from './entities/user.entity';
+import { CartsRepo } from '../carts/repos/carts.repo';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly userRepo: UserRepo) {}
+  constructor(
+    private readonly userRepo: UserRepo,
+    private readonly cartRepo: CartsRepo,
+  ) {}
 
   async getAllUsers(): Promise<UserDto[]> {
     return await this.userRepo.getList();
@@ -15,8 +19,11 @@ export class UsersService {
     return await this.userRepo.getUser(id);
   }
 
-  async addUser(newUser: UserDto): Promise<UserEntity> {
-    return this.userRepo.addUser(newUser);
+  async addUser(dto: UserDto): Promise<UserEntity> {
+    const newUser = await this.userRepo.addUser(dto);
+    await this.cartRepo.addOne(newUser.id);
+
+    return newUser;
   }
 
   async updateUser(id: string, updatedUserDto: Partial<UserEntity>) {
@@ -24,6 +31,8 @@ export class UsersService {
   }
 
   async deleteUser(id: string): Promise<UserEntity | string> {
-    return this.userRepo.deleteUser(id);
+    await this.cartRepo.archiveOne(id);
+
+    return await this.userRepo.deleteUser(id);
   }
 }

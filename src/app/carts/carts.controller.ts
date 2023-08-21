@@ -3,7 +3,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CartsService } from './carts.service';
 
 @ApiTags('carts')
-@Controller('products')
+@Controller('carts')
 export class CartsController {
   constructor(private readonly cartsService: CartsService) {}
 
@@ -15,16 +15,18 @@ export class CartsController {
 
   @ApiOperation({ summary: 'Get cart by id' })
   @Get('cartId:')
-  public async getProductById(@Param('cartId') cartId: string) {
+  public async getCartById(@Param('cartId') cartId: string) {
     return await this.cartsService.getCartById(cartId);
   }
 
   @ApiOperation({ summary: 'Edit cart discount' })
   @Put(':cartId')
-  public async editProduct(
+  public async editCartDiscount(
     @Param('cartId') cartId: string,
-    @Body() discount: number,
+    @Body() requestBody: { discount: number },
   ) {
-    return await this.cartsService.editDiscount(cartId, discount);
+    const { discount } = requestBody;
+
+    return await this.cartsService.editCartDiscount(cartId, discount);
   }
 }
