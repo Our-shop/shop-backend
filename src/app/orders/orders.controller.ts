@@ -3,13 +3,12 @@ import {ApiOperation, ApiTags} from '@nestjs/swagger';
 import {OrdersService} from './orders.service';
 import {OrderDto} from './dtos/order.dto';
 import {OrderEntity} from './entities/order.entity';
+import {NewOrderDto} from './dtos/new-order.dto';
 
 @ApiTags('orders')
 @Controller('orders')
 export class OrdersController {
     constructor(private readonly ordersService: OrdersService) {}
-
-    // TODO: Get Orders by User ID (take User Id from Delivery)
 
     @ApiOperation({ summary: 'Get all orders' })
     @Get()
@@ -23,10 +22,16 @@ export class OrdersController {
         return await this.ordersService.getOrderById(id);
     }
 
+    @ApiOperation({ summary: 'Get orders by user id' })
+    @Get('user/:userId')
+    async getOrdersByUserId(@Param('userId') id: string): Promise<OrderDto[] | string> {
+        return await this.ordersService.getOrdersByUserId(id);
+    }
+
     @ApiOperation({ summary: 'Add order' })
     @Post()
-    async addOrder(@Body() newOrder: OrderDto): Promise<OrderEntity> {
-        return this.ordersService.addOrder(newOrder);
+    async addOrder(@Body() newOrder: NewOrderDto): Promise<OrderEntity> {
+        return await this.ordersService.createOrder(newOrder);
     }
 
     @ApiOperation({ summary: 'Edit order' })
@@ -35,12 +40,12 @@ export class OrdersController {
         @Param('orderId') id: string,
         @Body() updatedOrderDto: Partial<OrderEntity>,
     ) {
-        return this.ordersService.updateOrder(id, updatedOrderDto);
+        return await this.ordersService.updateOrder(id, updatedOrderDto);
     }
 
     @ApiOperation({ summary: 'Archive order by id' })
     @Delete('/:orderId')
     async deleteOrder(@Param('orderId') id: string): Promise<OrderEntity | string> {
-        return this.ordersService.deleteOrder(id);
+        return await this.ordersService.deleteOrder(id);
     }
 }
