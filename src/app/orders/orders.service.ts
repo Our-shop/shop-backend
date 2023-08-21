@@ -13,6 +13,10 @@ export class OrdersService {
         private readonly orderItemsRepo: OrderItemsRepo
     ) {}
 
+    // TODO: Get Orders by User ID
+    // TODO: Check if products are available
+    // TODO Check Order logic
+
     async getAllOrders(): Promise<OrderDto[]> {
         return await this.orderRepo.getList();
     }
