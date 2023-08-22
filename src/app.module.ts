@@ -11,6 +11,7 @@ import { OrdersModule } from './app/orders/orders.module';
 import { OrderItemsModule } from './app/order-items/order-items.module';
 import {DeliveryModule} from './app/delivery/delivery.module';
 import { CartsModule } from './app/carts/carts.module';
+import { CartItemsModule } from './app/cart-items/cart-items.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { CartsModule } from './app/carts/carts.module';
     OrderItemsModule,
     DeliveryModule,
     CartsModule,
+    CartItemsModule,
   ],
   controllers: [],
   providers: [],

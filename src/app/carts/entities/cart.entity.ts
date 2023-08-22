@@ -1,7 +1,8 @@
-import { Entity, ManyToOne, Property } from '@mikro-orm/core';
+import { Entity, ManyToOne, OneToMany, Property } from '@mikro-orm/core';
 import { BasicEntity } from '../../../shared/entities/basic.entity';
 import { UserEntity } from '../../users/entities/user.entity';
 import { CartsRepo } from '../repos/carts.repo';
+import { CartItemEntity } from '../../cart-items/entities/cart-item.entity';
 
 @Entity({ tableName: 'carts', customRepository: () => CartsRepo })
 export class CartEntity extends BasicEntity {
@@ -21,4 +22,7 @@ export class CartEntity extends BasicEntity {
     lazy: true,
   })
   user?: UserEntity;
+
+  @OneToMany(() => CartItemEntity, (cartItem) => cartItem.cart)
+  cartItems?: CartItemEntity[];
 }

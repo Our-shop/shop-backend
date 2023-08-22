@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Body, Put } from '@nestjs/common';
+import { Controller, Get, Param, Body, Put, Delete } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CartsService } from './carts.service';
 
@@ -9,7 +9,7 @@ export class CartsController {
 
   @ApiOperation({ summary: 'Get all carts' })
   @Get()
-  public async getProducts() {
+  public async getCarts() {
     return await this.cartsService.getCarts();
   }
 
@@ -19,8 +19,8 @@ export class CartsController {
     return await this.cartsService.getCartById(cartId);
   }
 
-  @ApiOperation({ summary: 'Get active cart by userId' })
-  @Get('active/:userId:')
+  @ApiOperation({ summary: 'Get active cart by user-id' })
+  @Get('active/:userId')
   public async getActiveCartById(@Param('userId') userId: string) {
     return await this.cartsService.getActiveCartById(userId);
   }
