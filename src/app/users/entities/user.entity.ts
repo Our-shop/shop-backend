@@ -1,6 +1,7 @@
 import { Entity, ManyToOne, OneToMany, Property, Unique } from '@mikro-orm/core';
 import { UserRepo } from '../repos/user.repo';
 import { BasicEntity } from '../../../shared/entities/basic.entity';
+import { DeliveryEntity } from '../../delivery/entities/delivery.entity';
 import { UserRoleEntity } from '../../user-roles/entities/user-role.entity';
 import { CartEntity } from '../../carts/entities/cart.entity';
 import { OrderEntity } from '../../orders/entities/order.entity';
@@ -39,4 +40,7 @@ export class UserEntity extends BasicEntity {
 
   @OneToMany(() => OrderEntity, (e) => e.user)
   orders?: OrderEntity[];
+
+  @OneToMany(() => DeliveryEntity, (e) => e.user)
+  deliveries?: DeliveryEntity[];
 }

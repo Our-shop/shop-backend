@@ -59,7 +59,6 @@ export class OrdersRepo extends EntityRepository<OrderEntity> {
         const found = await this.findOne({ id });
         found.status = BasicStatuses.Archived;
         await this.entityManager.persistAndFlush(found);
-        // TODO archive order items
         return found;
     }
 }

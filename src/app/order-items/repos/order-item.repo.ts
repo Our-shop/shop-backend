@@ -52,4 +52,13 @@ export class OrderItemsRepo extends EntityRepository<OrderItemEntity> {
         await this.entityManager.persistAndFlush(found);
         return found;
     }
+
+    async deleteOrderItemsByOrderId(orderId: string):Promise<OrderItemEntity[] | string> {
+        const foundItems = await this.find({orderId: orderId});
+        foundItems.map((item) => {
+            item.status = BasicStatuses.Archived;
+            this.entityManager.persistAndFlush(item);
+        });
+        return foundItems;
+    }
 }

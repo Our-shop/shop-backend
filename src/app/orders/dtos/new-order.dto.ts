@@ -1,10 +1,8 @@
-import {BasicDto} from '../../../shared/dto/basic.dto';
 import {ApiProperty} from '@nestjs/swagger';
 import {ProductDto} from '../../products/dtos/product.dto';
-import {UserDto} from '../../users/dtos/user.dto';
 import {ValidateNested} from 'class-validator';
 
-export class NewOrderDto extends BasicDto {
+export class NewOrderDto {
     @ApiProperty({
         description: 'Delivery id',
     })

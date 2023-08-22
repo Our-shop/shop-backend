@@ -30,7 +30,7 @@ export class OrdersController {
 
     @ApiOperation({ summary: 'Add order' })
     @Post()
-    async addOrder(@Body() newOrder: NewOrderDto): Promise<OrderEntity> {
+    async addOrder(@Body() newOrder: NewOrderDto): Promise<OrderEntity | string> {
         return await this.ordersService.createOrder(newOrder);
     }
 
