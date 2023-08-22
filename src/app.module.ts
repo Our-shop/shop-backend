@@ -9,6 +9,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ProductsModule } from './app/products/products.module';
 import { UsersModule } from './app/users/users.module';
 import { UserRolesModule } from './app/user-roles/user-roles.module';
+import { OrdersModule } from './app/orders/orders.module';
 import { CartsModule } from './app/carts/carts.module';
 
 @Module({
@@ -28,6 +29,7 @@ import { CartsModule } from './app/carts/carts.module';
     ProductsModule,
     UsersModule,
     UserRolesModule,
+    OrdersModule,
     CartsModule,
   ],
   controllers: [AppController],
