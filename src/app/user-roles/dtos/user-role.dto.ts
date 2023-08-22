@@ -23,14 +23,14 @@ export class UserRoleDto extends BasicDto {
     @IsArray({ context: UserPermissions })
     permissions: UserPermissions[];
 
-    @ApiProperty({
-        description: "List of users",
-        required: false,
-        isArray: true,
-        type: () => UserDto
-    })
-    @ValidateNested({ context: UserDto })
-    users?: UserDto[];
+    // @ApiProperty({
+    //     description: "List of users",
+    //     required: false,
+    //     isArray: true,
+    //     type: () => UserDto
+    // })
+    // @ValidateNested({ context: UserDto })
+    // users?: UserDto[];
 
     public static fromEntity(entity: UserRoleEntity) {
         const it = new UserRoleDto();
