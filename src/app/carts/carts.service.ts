@@ -4,7 +4,9 @@ import { CartsRepo } from './repos/carts.repo';
 
 @Injectable()
 export class CartsService {
-  constructor(private readonly cartsRepo: CartsRepo) {}
+  constructor(
+    private readonly cartsRepo: CartsRepo,
+  ) {}
 
   public async getCarts(): Promise<CartDto[]> {
     const entities = await this.cartsRepo.getAll();
@@ -13,15 +15,15 @@ export class CartsService {
   }
 
   public async getCartById(cartId: string): Promise<CartDto> {
-    const entities = await this.cartsRepo.getById(cartId);
+    const entity = await this.cartsRepo.getById(cartId);
 
-    return CartDto.fromEntity(entities) || null;
+    return CartDto.fromEntity(entity) || null;
   }
 
   public async getActiveCartById(userId: string): Promise<CartDto> {
-    const entities = await this.cartsRepo.getActiveCardByUserId(userId);
+    const entity = await this.cartsRepo.getActiveCardByUserId(userId);
 
-    return CartDto.fromEntity(entities) || null;
+    return CartDto.fromEntity(entity) || null;
   }
 
   public async editCartDiscount(

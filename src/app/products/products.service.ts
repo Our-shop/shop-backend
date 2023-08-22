@@ -8,7 +8,6 @@ export class ProductsService {
 
   public async getProducts(): Promise<ProductDto[]> {
     const entities = await this.productsRepo.getAll();
-
     return ProductDto.fromEntities(entities) || [];
   }
 
