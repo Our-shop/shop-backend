@@ -14,9 +14,15 @@ export class CartsController {
   }
 
   @ApiOperation({ summary: 'Get cart by id' })
-  @Get('cartId:')
+  @Get(':cartId')
   public async getCartById(@Param('cartId') cartId: string) {
     return await this.cartsService.getCartById(cartId);
+  }
+
+  @ApiOperation({ summary: 'Get active cart by userId' })
+  @Get('active/:userId:')
+  public async getActiveCartById(@Param('userId') userId: string) {
+    return await this.cartsService.getActiveCartById(userId);
   }
 
   @ApiOperation({ summary: 'Edit cart discount' })

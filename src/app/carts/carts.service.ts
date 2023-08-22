@@ -18,6 +18,12 @@ export class CartsService {
     return CartDto.fromEntity(entities) || null;
   }
 
+  public async getActiveCartById(userId: string): Promise<CartDto> {
+    const entities = await this.cartsRepo.getActiveCardByUserId(userId);
+
+    return CartDto.fromEntity(entities) || null;
+  }
+
   public async editCartDiscount(
     cartId: string,
     discount: number,

@@ -17,9 +17,13 @@ export class CartsRepo extends EntityRepository<CartEntity> {
     return await this.findOne({ id });
   }
 
-  public async addOne(userId: string): Promise<CartEntity> {
+  public async getActiveCardByUserId(userId: string): Promise<CartEntity> {
+    return await this.findOne({ userId: userId, status: BasicStatuses.Active });
+  }
+
+  public async addByUserId(userId: string): Promise<CartEntity> {
     const newCart = await this.create({
-      id: userId,
+      userId: userId,
       discount: 10,
     });
     await this.entityManager.persistAndFlush(newCart);
@@ -40,6 +44,14 @@ export class CartsRepo extends EntityRepository<CartEntity> {
 
   public async archiveOne(id: string): Promise<CartEntity> {
     const cartToArchive = await this.findOne({ id });
+    cartToArchive.status = BasicStatuses.Archived;
+    await this.entityManager.persistAndFlush(cartToArchive);
+
+    return cartToArchive;
+  }
+
+  public async archiveByUserId(userId: string): Promise<CartEntity> {
+    const cartToArchive = await this.findOne({ userId: userId });
     cartToArchive.status = BasicStatuses.Archived;
     await this.entityManager.persistAndFlush(cartToArchive);
 

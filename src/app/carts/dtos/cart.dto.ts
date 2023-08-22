@@ -4,6 +4,11 @@ import { CartEntity } from '../entities/cart.entity';
 
 export class CartDto extends BasicDto {
   @ApiProperty({
+    description: 'Cart user id',
+  })
+  userId!: string;
+
+  @ApiProperty({
     description: 'Cart discount',
   })
   discount!: number;
@@ -15,6 +20,7 @@ export class CartDto extends BasicDto {
     it.created = entity.created.valueOf();
     it.updated = entity.updated.valueOf();
     it.status = entity.status;
+    it.userId = entity.userId;
     it.discount = entity.discount;
 
     return it;

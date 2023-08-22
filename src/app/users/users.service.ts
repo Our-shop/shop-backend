@@ -21,7 +21,7 @@ export class UsersService {
 
   async addUser(dto: UserDto): Promise<UserEntity> {
     const newUser = await this.userRepo.addUser(dto);
-    await this.cartRepo.addOne(newUser.id);
+    await this.cartRepo.addByUserId(newUser.id);
 
     return newUser;
   }
@@ -31,7 +31,7 @@ export class UsersService {
   }
 
   async deleteUser(id: string): Promise<UserEntity | string> {
-    await this.cartRepo.archiveOne(id);
+    await this.cartRepo.archiveByUserId(id);
 
     return await this.userRepo.deleteUser(id);
   }

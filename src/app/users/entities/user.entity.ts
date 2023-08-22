@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, OneToOne, Property, Unique } from '@mikro-orm/core';
+import { Entity, ManyToOne, OneToMany, OneToOne, Property, Unique } from '@mikro-orm/core';
 import { UserRepo } from '../repos/user.repo';
 import { BasicEntity } from '../../../shared/entities/basic.entity';
 import { UserRoleEntity } from '../../user-roles/entities/user-role.entity';
@@ -33,6 +33,6 @@ export class UserEntity extends BasicEntity {
   role?: UserRoleEntity;
 
   // TODO mapping data in connection with CART (if needed)
-  @OneToOne(() => CartEntity, (cart) => cart.user)
-  cart!: CartEntity;
+  @OneToMany(() => CartEntity, (cart) => cart.user)
+  carts?: CartEntity[];
 }
