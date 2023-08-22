@@ -11,6 +11,7 @@ import { UsersModule } from './app/users/users.module';
 import { UserRolesModule } from './app/user-roles/user-roles.module';
 import { OrdersModule } from './app/orders/orders.module';
 import { OrderItemsModule } from './app/order-items/order-items.module';
+import { CartsModule } from './app/carts/carts.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { OrderItemsModule } from './app/order-items/order-items.module';
     UserRolesModule,
     OrdersModule,
     OrderItemsModule,
+    CartsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
