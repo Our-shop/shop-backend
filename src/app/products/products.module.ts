@@ -16,5 +16,6 @@ import { ProductsRepo } from "./repos/products.repo";
   ],
   controllers: [ProductsController],
   providers: [ProductsService, ProductsRepo],
+  exports: [ProductsRepo]
 })
 export class ProductsModule {}
