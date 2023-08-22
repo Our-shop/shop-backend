@@ -6,7 +6,7 @@ import {OrderEntity} from './entities/order.entity';
 import {OrderItemEntity} from '../order-items/entities/order-item.entity';
 import {OrderItemsRepo} from '../order-items/repos/order-item.repo';
 // import {OrderItemsRepo} from '../order-items/repos/order-item.repo';
-// import {OrderItemEntity} from '../order-items/entities/order-item.entity';
+// import {DeliveryEntity} from '../order-items/entities/order-item.entity';
 
 @Module({
     imports: [
