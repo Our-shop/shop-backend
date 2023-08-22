@@ -10,6 +10,7 @@ import { UserRolesModule } from './app/user-roles/user-roles.module';
 import { OrdersModule } from './app/orders/orders.module';
 import { OrderItemsModule } from './app/order-items/order-items.module';
 import {DeliveryModule} from './app/delivery/delivery.module';
+import { CartsModule } from './app/carts/carts.module';
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import {DeliveryModule} from './app/delivery/delivery.module';
     UserRolesModule,
     OrdersModule,
     OrderItemsModule,
-    DeliveryModule
+    DeliveryModule,
+    CartsModule,
   ],
   controllers: [],
   providers: [],
