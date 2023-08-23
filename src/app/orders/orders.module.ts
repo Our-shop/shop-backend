@@ -5,8 +5,7 @@ import {OrdersController} from './orders.controller';
 import {OrderEntity} from './entities/order.entity';
 import {OrderItemEntity} from '../order-items/entities/order-item.entity';
 import {OrderItemsRepo} from '../order-items/repos/order-item.repo';
-import {ProductsRepo} from '../products/repos/products.repo';
-import {ProductEntity} from '../products/entities/product.entity';
+import {ProductEntity} from '../../shared/entities/product.entity';
 
 @Module({
     imports: [
@@ -14,7 +13,7 @@ import {ProductEntity} from '../products/entities/product.entity';
             entities: [OrderEntity, OrderItemEntity, ProductEntity],
         }),
     ],
-    providers: [OrdersService, OrderItemsRepo, ProductsRepo],
+    providers: [OrdersService, OrderItemsRepo],
     controllers: [OrdersController],
 })
 export class OrdersModule {}
