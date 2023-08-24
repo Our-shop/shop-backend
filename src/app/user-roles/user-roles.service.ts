@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {UserRoleRepo} from './repos/user-role.repo';
 import {UserRoleDto} from './dtos/user-role.dto';
 import {UserRoleEntity} from './entities/user-role.entity';
@@ -11,7 +11,7 @@ export class UserRolesService {
         return await this.userRoleRepo.getList();
     }
 
-    async getUserRoleById(id: string): Promise<UserRoleDto | string> {
+    async getUserRoleById(id: string): Promise<UserRoleEntity> {
         return await this.userRoleRepo.getUserRole(id);
     }
 

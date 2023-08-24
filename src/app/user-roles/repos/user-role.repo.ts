@@ -12,13 +12,8 @@ export class UserRoleRepo extends EntityRepository<UserRoleEntity> {
         return userRoles || [];
     }
 
-    async getUserRole(id: string): Promise<UserRoleDto | string> {
-        const found = await this.findOne({ id });
-        if (!found) {
-            throw new NotFoundException(`User role with id: ${id} not found`);
-        }
-        const userRole = UserRoleDto.fromEntity(found);
-        return userRole || null;
+    async getUserRole(id: string): Promise<UserRoleEntity> {
+        return await this.findOne({ id });
     }
 
     async addUserRole(dto: UserRoleDto): Promise<UserRoleEntity> {

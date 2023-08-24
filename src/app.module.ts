@@ -9,9 +9,10 @@ import { UsersModule } from './app/users/users.module';
 import { UserRolesModule } from './app/user-roles/user-roles.module';
 import { OrdersModule } from './app/orders/orders.module';
 import { OrderItemsModule } from './app/order-items/order-items.module';
-import {DeliveryModule} from './app/delivery/delivery.module';
+import { DeliveryModule } from './app/delivery/delivery.module';
 import { CartsModule } from './app/carts/carts.module';
 import { CartItemsModule } from './app/cart-items/cart-items.module';
+import {AuthModule} from './app/auth/auth.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { CartItemsModule } from './app/cart-items/cart-items.module';
     DeliveryModule,
     CartsModule,
     CartItemsModule,
+    AuthModule
   ],
   controllers: [],
   providers: [],
