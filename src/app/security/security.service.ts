@@ -1,15 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, NotAcceptableException} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 
 import { UserRepo } from 'src/app/users/repos/user.repo';
 import { UserEntity } from 'src/app/users/entities/user.entity';
-
-import { JwtTokenDto } from 'src/app/security/dtos/jwt-token.dto';
 import { UserSessionDto } from 'src/app/security/dtos/user-session.dto';
-import { ConfigService } from '@nestjs/config';
 import { Tokens } from '../auth/types/tokens.type';
-
-import * as bcrypt from 'bcrypt';
+import { RefreshTokenRepo } from '../refresh-token/repo/refresh-token.repo';
+import {ErrorCodes} from '../../shared/enums/error-codes.enum';
 
 @Injectable()
 export class SecurityService {
@@ -17,6 +16,7 @@ export class SecurityService {
     private readonly userRepo: UserRepo,
     private readonly jwtService: JwtService,
     private config: ConfigService,
+    private readonly refreshTokenRepo: RefreshTokenRepo,
   ) {}
 
   public async getUserById(userId: string) {
@@ -24,9 +24,9 @@ export class SecurityService {
   }
 
   async getTokens(entity: UserEntity): Promise<Tokens> {
-    const permissions = await this.userRepo.getUserRoles(entity.id);
+    const permissions = await this.userRepo.getUserPermissions(entity.id);
     const payload = UserSessionDto.fromEntity(entity, permissions);
-    // const user = this.userRepo.findOne({ id: entity.id });
+    const user = await this.userRepo.findOne({ id: entity.id });
 
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(payload, {
@@ -38,7 +38,8 @@ export class SecurityService {
         expiresIn: this.config.get<number>('app.r_token_expires'),
       }),
     ]);
-    await this.userRepo.addRefreshToken(entity.id, rt);
+
+    await this.refreshTokenRepo.addRefreshToken(user, rt);
 
     return {
       access_token: at,
@@ -48,34 +49,53 @@ export class SecurityService {
     };
   }
 
-  // async refreshTokens(entity: UserEntity, rt: string): Promise<Tokens> {
-  //   // const user = await this.userRepo.getUser(entity.id);
-  //   // if (!user) throw new ForbiddenException('Access Denied');
-  //   // // const rtMatches = bcrypt.compare(rt, user.hashedRt);
-  //   // // const rtMatches = bcrypt.compare(rt, user.hashedRt);
-  //   // if (!rtMatches) throw new ForbiddenException('Access Denied');
-  //   //
-  //   // const tokens = await this.securityService.getTokens(entity);
-  //   // await this.updateRtHash(user.id, tokens.refresh_token);
-  //   //
-  //   // return tokens;
-  // }
+    async refreshTokens(accessToken: string, refreshToken: string) {
+        const validTokens =
+            this.validateAccessToken(accessToken) &&
+            (await this.validateRefreshToken(refreshToken));
+        if (!validTokens) {
+            throw new NotAcceptableException({ message:ErrorCodes.InvalidTokens});
+        }
 
-  // async generateToken(entity: UserEntity): Promise<JwtTokenDto> {
-  //   const userWithRole = await this.userRepo.getUserWithRole(entity.id);
-  //   const payload = UserSessionDto.fromEntity(
-  //     entity,
-  //     userWithRole.role.permissions,
-  //   );
-  //   const secret = this.config.get<string>('app.jwt_secret');
-  //   const access_token = this.jwtService.sign(payload, {secret});
-  //
-  //   return {
-  //     access_token,
-  //   } as JwtTokenDto;
-  // }
+        const accessPayload = this.jwtService.decode(accessToken) as UserSessionDto;
+
+        const user = await this.userRepo.findOne({ id: accessPayload.id });
+        return await this.getTokens(user);
+    }
+
+    async validateRefreshToken(token: string) {
+        const secret = this.config.get<string>('app.jwt_secret');
+        try {
+            const tokenEntity = await this.refreshTokenRepo.findOne({ refresh_token: token });
+            console.log(tokenEntity);
+            if (!tokenEntity) {
+                return false;
+            }
+            await this.refreshTokenRepo.nativeDelete({ refresh_token: token });
+            const payload = this.jwtService.verify(token, { secret });
+            return new Date().getTime() < payload.exp * 1000;
+        } catch (err) {
+            console.log(err);
+            return false;
+        }
+    }
+
+    validateAccessToken(token: string) {
+        const secret = this.config.get<string>('app.jwt_secret');
+        try {
+            const payload = this.jwtService.verify(token, { secret });
+            return new Date().getTime() < payload.exp * 1000;
+        } catch (err) {
+            console.log(err);
+            return false;
+        }
+    }
 
   async hashData(data: string) {
     return await bcrypt.hash(data, 10);
+  }
+
+  async checkPassword(inputPassword, hashedPassword) {
+    return bcrypt.compare(inputPassword, hashedPassword);
   }
 }

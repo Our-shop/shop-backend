@@ -28,8 +28,7 @@ export const CurrentUser = createParamDecorator(
 @Injectable()
 export class JwtPermissionsGuard
   extends AuthGuard('jwt-strategy')
-  implements CanActivate
-{
+  implements CanActivate {
   protected readonly logger = new Logger('User Permissions Guard');
 
   protected permissions: UserPermissions[];
@@ -40,37 +39,35 @@ export class JwtPermissionsGuard
 
   canActivate(context: ExecutionContext) {
     this.permissions =
-      this.reflector.get<UserPermissions[]>(
-        'user_permissions',
-        context.getHandler(),
-      ) || [];
+        this.reflector.get<UserPermissions[]>(
+            'user_permissions',
+            context.getHandler(),
+        ) || [];
 
     return super.canActivate(context);
   }
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  handleRequest(err: Error, user: UserSessionDto): UserSessionDto {
-    console.log('permissions', this);
-    if (err || !user) {
-      this.logger.error('User is not authorized to perform request');
-      throw err || new UnauthorizedException(ErrorCodes.NotAuthorizedRequest);
-    }
-
-    if (isEmpty(this.permissions)) {
-      return user;
-    }
-
-    if (includes(user.permissions, UserPermissions.All)) {
-      return user;
-    }
-
-    console.log(user);
-    if (difference(this.permissions, user.permissions).length) {
-      this.logger.error('User is not authorized to perform request');
-      throw new UnauthorizedException(ErrorCodes.NotAuthorizedRequest);
-    }
-
-    return user;
-  }
 }
+//   handleRequest(err: Error, user: UserSessionDto): UserSessionDto {
+//     console.log('permissions', this);
+//     if (err || !user) {
+//       this.logger.error('User is not authorized to perform request');
+//       throw err || new UnauthorizedException(ErrorCodes.NotAuthorizedRequest);
+//     }
+//
+//     if (isEmpty(this.permissions)) {
+//       return user;
+//     }
+//
+//     if (includes(user.permissions, UserPermissions.All)) {
+//       return user;
+//     }
+//
+//     console.log(user);
+//     if (difference(this.permissions, user.permissions).length) {
+//       this.logger.error('User is not authorized to perform request');
+//       throw new UnauthorizedException(ErrorCodes.NotAuthorizedRequest);
+//     }
+//
+//     return user;
+//   }
+// }

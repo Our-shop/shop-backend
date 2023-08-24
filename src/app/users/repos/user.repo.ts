@@ -4,7 +4,6 @@ import { UserEntity } from '../entities/user.entity';
 import { UserDto } from '../dtos/user.dto';
 import { BasicStatuses } from '../../../shared/enums/basic-statuses.enum';
 import { UserSignUpForm } from '../../auth/dtos/user-sign-up.form';
-import { UserRoleDto } from '../../user-roles/dtos/user-role.dto';
 import { UserRoleRepo } from '../../user-roles/repos/user-role.repo';
 
 @Injectable()
@@ -31,21 +30,22 @@ export class UserRepo extends EntityRepository<UserEntity> {
     return user || null;
   }
 
-  async getUserByEmail(email: string): Promise<UserEntity | null> {
+  async getUserByEmail(email: string) {
     return await this.entityManager.findOne(UserEntity,{email: email});
   }
 
-  async getByEmailAndPassword(email: string, password: string): Promise<UserEntity | null> {
+  async getByEmailAndPassword(email: string, password: string) {
     return await this.entityManager.findOne(UserEntity,{ email, password });
   }
 
-  async getUserRoles(userId: string) {
-    const user = await this.findOne({ id: userId });
-    const userRoles = await this.userRolesRepo.findOne({ id: user.roleId });
-    return userRoles.permissions;
+  async getUserPermissions(id: string) {
+    const user = await this.findOne({ id });
+    const roleId = user.roleId;
+    const userRole = await this.userRolesRepo.getUserRole(roleId);
+    return userRole.permissions;
   }
 
-  async addUser(dto: UserSignUpForm): Promise<UserEntity> {
+  async addNewUser(dto: UserSignUpForm): Promise<UserEntity> {
     const newUser = this.create({
       userName: dto.userName,
       password: dto.password,
@@ -54,13 +54,6 @@ export class UserRepo extends EntityRepository<UserEntity> {
     });
     await this.entityManager.persistAndFlush(newUser);
     return newUser;
-  }
-
-  async addRefreshToken(userId: string, rt: string) {
-    const user = await this.findOne({ id: userId });
-    user.refreshToken = rt;
-    await this.entityManager.persistAndFlush(user);
-    return user;
   }
 
   async updateUser(

@@ -3,7 +3,7 @@ import { UserDto } from '../../users/dtos/user.dto';
 
 export class RefreshTokenDTO {
   @ApiProperty()
-  token: string;
+  refresh_token: string;
 
   @ApiProperty()
   user: UserDto;

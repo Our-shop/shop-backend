@@ -28,7 +28,7 @@ export class UsersService {
   async addUser(dto: UserSignUpForm): Promise<UserEntity> {
     // const userRole = await this.userRoleRepo.getUserRole(dto.roleId);
     // const roleDto =  UserRoleDto.fromEntity(userRole);
-    const newUser = await this.userRepo.addUser(dto);
+    const newUser = await this.userRepo.addNewUser(dto);
     await this.cartRepo.addByUserId(newUser.id);
     return newUser;
   }

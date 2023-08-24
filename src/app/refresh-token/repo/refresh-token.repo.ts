@@ -12,7 +12,7 @@ export class RefreshTokenRepo extends EntityRepository<RefreshTokenEntity> {
 
   async addRefreshToken(entity: UserEntity, token: string) {
     const newToken = this.create({
-      token: token,
+      refresh_token: token,
       user: entity,
     });
     await this.entityManager.persistAndFlush(newToken);

@@ -24,7 +24,7 @@ export class JwtStrategyService extends PassportStrategy(
         passReqToCallback: true,
         secretOrKey: configService.get<string>('app.rt_jtw_secret'),
       },
-      async (req, payload, next) => await this.verify(req, payload, next),
+      // async (req, payload, next) => await this.verify(req, payload, next),
     );
   }
 

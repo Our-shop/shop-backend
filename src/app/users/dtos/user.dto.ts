@@ -23,10 +23,10 @@ export class UserDto extends BasicDto {
   })
   roleId!: string;
 
-  @ApiProperty({
-    description: 'User refresh token',
-  })
-  refreshToken?: string;
+  // @ApiProperty({
+  //   description: 'User refresh token',
+  // })
+  // refreshToken?: string;
 
   static fromEntity(entity?: UserEntity) {
     if (!entity) {
@@ -41,7 +41,7 @@ export class UserDto extends BasicDto {
     it.userName = entity.userName;
     it.password = entity.password;
     it.email = entity.email;
-    it.refreshToken = entity.refreshToken;
+    // it.refreshToken = entity.refreshToken;
 
 
     return it;

@@ -3,13 +3,10 @@ import {ApiOperation, ApiTags} from '@nestjs/swagger';
 import {AuthService} from './auth.service';
 import {ErrorCodes} from '../../shared/enums/error-codes.enum';
 import {UserSignInForm} from './dtos/user-sign-in.form';
-import {JwtTokenDto} from '../security/dtos/jwt-token.dto';
-import {AuthGuard} from '@nestjs/passport';
-import {JwtPermissionsGuard} from '../security/guards/jwt-permissions.guard';
 import {UserSignUpForm} from './dtos/user-sign-up.form';
-import {JwtGuard} from '../security/guards/jwt-auth-guard';
 import {SecurityService} from '../security/security.service';
 import {Tokens} from './types/tokens.type';
+import {TokensDto} from '../security/dtos/tokens.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -34,7 +31,6 @@ export class AuthController {
     }
 
     @ApiOperation({ summary: 'Sign in for user' })
-    // @UseGuards(AuthGuard('jwt-strategy'))
     @Post('sign-in')
     async signIn(@Body() body: UserSignInForm){
         const dto = UserSignInForm.from(body);
@@ -46,7 +42,7 @@ export class AuthController {
             });
         }
 
-        // return await this.authService.signIn(dto);
+        return await this.authService.signIn(dto);
     }
 
     // @UseGuards(AuthGuard('jwt-strategy'))
@@ -55,11 +51,13 @@ export class AuthController {
     //     return await this.authService.logout(user.id);
     // }
 
-    @UseGuards(JwtGuard)
+    @ApiOperation({ summary: 'Refresh tokens' })
     @Post('refresh')
-    refreshTokens(@Req() req) {
-        console.log(req);
-        return this.authService.refreshTokens(req.user, req.user.refreshToken);
+    async refreshTokens(@Body() body: TokensDto): Promise<Tokens> {
+        return await this.securityService.refreshTokens(
+            body.access_token,
+            body.refresh_token,
+        );
     }
 
     // @Post('test')

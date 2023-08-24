@@ -7,7 +7,7 @@ import { CartEntity } from '../../carts/entities/cart.entity';
 import { OrderEntity } from '../../orders/entities/order.entity';
 import { RefreshTokenEntity } from '../../refresh-token/entity/refresh-token.entity';
 
-@Unique({ properties: ['email'] })
+
 @Entity({ tableName: 'users', customRepository: () => UserRepo })
 export class UserEntity extends BasicEntity {
   @Property({ name: 'user_name' })
@@ -16,14 +16,15 @@ export class UserEntity extends BasicEntity {
   @Property({ name: 'password' })
   password!: string;
 
+  @Unique()
   @Property({ name: 'email' })
   email!: string;
 
   @Property({ name: 'role_id' })
   roleId!: string;
 
-  @Property({ name: 'refresh_token' })
-  refreshToken?: string;
+  // @Property({ name: 'refresh_token' })
+  // refreshToken?: string;
 
   @ManyToOne({
     entity: () => UserRoleEntity,
