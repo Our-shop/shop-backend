@@ -1,7 +1,8 @@
 import { ProductCategories } from '../enums/product-categories.enum';
-import { BasicDto } from '../../../shared/dto/basic.dto';
+import { BasicDto } from './basic.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { ProductEntity } from '../entities/product.entity';
+import { ProductTypes } from '../enums/product-types.enum';
 
 export class ProductDto extends BasicDto {
   @ApiProperty({
@@ -33,30 +34,13 @@ export class ProductDto extends BasicDto {
     description: 'Product category',
     enum: ProductCategories,
   })
-  category!: ProductCategories;
+  category: ProductCategories;
 
   @ApiProperty({
-    description: 'Product type',
+    description: 'Product category',
+    enum: ProductTypes,
   })
-  type!: string;
-
-  @ApiProperty({
-    description: 'Product(food) expiration date',
-    required: false,
-  })
-  expirationDate?: string;
-
-  @ApiProperty({
-    description: 'Product(clothes) size',
-    required: false,
-  })
-  size?: string;
-
-  @ApiProperty({
-    description: 'Product(toys) recommended age',
-    required: false,
-  })
-  recommendedAge?: number;
+  type!: ProductTypes;
 
   static fromEntity(entity?: ProductEntity): ProductDto {
     if (!entity) return;
@@ -72,9 +56,6 @@ export class ProductDto extends BasicDto {
     it.quantity = entity.quantity;
     it.category = entity.category;
     it.type = entity.type;
-    it.expirationDate = entity.expirationDate;
-    it.size = entity.size;
-    it.recommendedAge = entity.recommendedAge;
 
     return it;
   }

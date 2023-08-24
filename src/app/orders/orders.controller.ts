@@ -28,11 +28,12 @@ export class OrdersController {
         return await this.ordersService.getOrdersByUserId(id);
     }
 
-    @ApiOperation({ summary: 'Add order' })
-    @Post()
-    async addOrder(@Body() newOrder: NewOrderDto): Promise<OrderEntity | string> {
-        return await this.ordersService.createOrder(newOrder);
-    }
+    // TODO add switch in service method
+    // @ApiOperation({ summary: 'Add order' })
+    // @Post()
+    // async addOrder(@Body() newOrder: NewOrderDto): Promise<OrderEntity | string> {
+    //     return await this.ordersService.createOrder(newOrder);
+    // }
 
     @ApiOperation({ summary: 'Edit order' })
     @Put('/:orderId')
