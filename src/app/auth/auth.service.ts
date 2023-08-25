@@ -1,4 +1,5 @@
 import {BadRequestException, ForbiddenException, Injectable} from '@nestjs/common';
+import { EventEmitter2 } from "@nestjs/event-emitter";
 
 import {UserRepo} from '../users/repos/user.repo';
 import {UserSignInForm} from './dtos/user-sign-in.form';
@@ -6,13 +7,15 @@ import {ErrorCodes} from '../../shared/enums/error-codes.enum';
 import {SecurityService} from '../security/security.service';
 import {UserSignUpForm} from './dtos/user-sign-up.form';
 import {Tokens} from './types/tokens.type';
+import {NewUserEvent} from '../../events/new.user.event';
 
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly userRepo: UserRepo,
-        private readonly securityService: SecurityService
+        private readonly securityService: SecurityService,
+        private eventEmitter: EventEmitter2
     ) {}
 
     async signIn(form: UserSignInForm): Promise<Tokens> {
@@ -37,6 +40,9 @@ export class AuthService {
         }
         form.password = await this.securityService.hashData(form.password);
         const entity = await this.userRepo.addNewUser(form);
+        this.eventEmitter.emit('new.user',
+            new NewUserEvent(entity.userName)
+        )
         return await this.securityService.getTokens(entity);
     }
 
