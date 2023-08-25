@@ -21,12 +21,8 @@ export class ToysService {
 
   public async editToy(
     foodId: string,
-    dto: Partial<ToyDto>,
+    dto: Partial<ToyEntity>,
   ): Promise<ToyEntity> {
     return await this.toysRepo.editOne(foodId, dto);
-  }
-
-  public async archiveToy(foodId: string): Promise<ToyEntity> {
-    return await this.toysRepo.archiveOne(foodId);
   }
 }

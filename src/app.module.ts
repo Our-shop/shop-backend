@@ -8,12 +8,11 @@ import { UsersModule } from './app/users/users.module';
 import { UserRolesModule } from './app/user-roles/user-roles.module';
 import { OrdersModule } from './app/orders/orders.module';
 import { OrderItemsModule } from './app/order-items/order-items.module';
-import {DeliveryModule} from './app/delivery/delivery.module';
-import { CartsModule } from './app/carts/carts.module';
-import { CartItemsModule } from './app/cart-items/cart-items.module';
+import { DeliveryModule } from './app/delivery/delivery.module';
 import { FoodModule } from './app/food/food.module';
 import { ClothesModule } from './app/clothes/clothes.module';
 import { ToysModule } from './app/toys/toys.module';
+import { ProductsModule } from './app/products/products.module';
 
 @Module({
   imports: [
@@ -29,6 +28,7 @@ import { ToysModule } from './app/toys/toys.module';
     }),
     EventEmitterModule.forRoot(),
     // ===== app =====
+    ProductsModule,
     FoodModule,
     ClothesModule,
     ToysModule,
@@ -37,8 +37,6 @@ import { ToysModule } from './app/toys/toys.module';
     OrdersModule,
     OrderItemsModule,
     DeliveryModule,
-    CartsModule,
-    CartItemsModule,
   ],
   controllers: [],
   providers: [],

@@ -1,7 +1,8 @@
-import { Entity, Property, Enum } from '@mikro-orm/core';
+import { Entity, Property, Enum, OneToMany } from '@mikro-orm/core';
 import { BasicEntity } from './basic.entity';
 import { ProductCategories } from '../enums/product-categories.enum';
 import { ProductTypes } from '../enums/product-types.enum';
+import { OrderItemEntity } from '../../app/order-items/entities/order-item.entity';
 
 @Entity({
   abstract: true,
@@ -31,4 +32,6 @@ export abstract class ProductEntity extends BasicEntity {
   type!: ProductTypes;
 
   // TODO add links here...
+  @OneToMany(() => OrderItemEntity, (item) => item.product)
+  orderItems?: OrderItemEntity[];
 }

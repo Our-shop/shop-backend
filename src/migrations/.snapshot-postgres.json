@@ -545,14 +545,14 @@
           ],
           "mappedType": "enum"
         },
-        "total_amount": {
-          "name": "total_amount",
-          "type": "int",
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
+          "nullable": true,
+          "mappedType": "uuid"
         },
         "delivery_id": {
           "name": "delivery_id",
@@ -563,14 +563,37 @@
           "nullable": true,
           "mappedType": "uuid"
         },
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
+        "order_status": {
+          "name": "order_status",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "'in_cart'",
+          "enumItems": [
+            "in_cart",
+            "in_order"
+          ],
+          "mappedType": "enum"
+        },
+        "discount": {
+          "name": "discount",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "total_amount": {
+          "name": "total_amount",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "uuid"
+          "mappedType": "integer"
         }
       },
       "name": "orders",
@@ -647,47 +670,6 @@
           "length": 6,
           "mappedType": "datetime"
         },
-        "status": {
-          "name": "status",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "'active'",
-          "enumItems": [
-            "active",
-            "archived"
-          ],
-          "mappedType": "enum"
-        },
-        "title": {
-          "name": "title",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "string"
-        },
-        "product_quantity": {
-          "name": "product_quantity",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
-        },
-        "product_price": {
-          "name": "product_price",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
-        },
         "order_id": {
           "name": "order_id",
           "type": "uuid",
@@ -696,6 +678,43 @@
           "primary": false,
           "nullable": true,
           "mappedType": "uuid"
+        },
+        "product_id": {
+          "name": "product_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "uuid"
+        },
+        "product_quantity": {
+          "name": "product_quantity",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "1",
+          "mappedType": "string"
+        },
+        "product_title": {
+          "name": "product_title",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "product_price": {
+          "name": "product_price",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
         }
       },
       "name": "order_items",
@@ -725,201 +744,17 @@
           "referencedTableName": "public.orders",
           "deleteRule": "set null",
           "updateRule": "cascade"
-        }
-      }
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
         },
-        "created": {
-          "name": "created",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "updated": {
-          "name": "updated",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "status": {
-          "name": "status",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "'active'",
-          "enumItems": [
-            "active",
-            "archived"
-          ],
-          "mappedType": "enum"
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "uuid"
-        },
-        "discount": {
-          "name": "discount",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
-        }
-      },
-      "name": "carts",
-      "schema": "public",
-      "indexes": [
-        {
-          "keyName": "carts_pkey",
+        "order_items_product_id_foreign": {
+          "constraintName": "order_items_product_id_foreign",
           "columnNames": [
-            "id"
+            "product_id"
           ],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "carts_user_id_foreign": {
-          "constraintName": "carts_user_id_foreign",
-          "columnNames": [
-            "user_id"
-          ],
-          "localTableName": "public.carts",
+          "localTableName": "public.order_items",
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.users",
-          "deleteRule": "set null",
-          "updateRule": "cascade"
-        }
-      }
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        },
-        "created": {
-          "name": "created",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "updated": {
-          "name": "updated",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "status": {
-          "name": "status",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "'active'",
-          "enumItems": [
-            "active",
-            "archived"
-          ],
-          "mappedType": "enum"
-        },
-        "cart_id": {
-          "name": "cart_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "uuid"
-        },
-        "product_id": {
-          "name": "product_id",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "string"
-        },
-        "product_quantity": {
-          "name": "product_quantity",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
-        }
-      },
-      "name": "cart_items",
-      "schema": "public",
-      "indexes": [
-        {
-          "keyName": "cart_items_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "cart_items_cart_id_foreign": {
-          "constraintName": "cart_items_cart_id_foreign",
-          "columnNames": [
-            "cart_id"
-          ],
-          "localTableName": "public.cart_items",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.carts",
+          "referencedTableName": "public.products",
           "deleteRule": "set null",
           "updateRule": "cascade"
         }

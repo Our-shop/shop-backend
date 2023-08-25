@@ -3,8 +3,8 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { UserEntity } from './entities/user.entity';
-import { CartsRepo } from '../carts/repos/carts.repo';
-import { CartItemsRepo } from '../cart-items/repos/cart-items.repo';
+import { OrdersRepo } from '../orders/repos/orders.repo';
+import { OrderItemsRepo } from '../order-items/repos/order-item.repo';
 
 @Module({
   imports: [
@@ -12,7 +12,7 @@ import { CartItemsRepo } from '../cart-items/repos/cart-items.repo';
       entities: [UserEntity],
     }),
   ],
-  providers: [UsersService, CartsRepo, CartItemsRepo],
+  providers: [UsersService, OrdersRepo, OrderItemsRepo],
   controllers: [UsersController],
 })
 export class UsersModule {}

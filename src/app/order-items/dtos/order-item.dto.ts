@@ -1,49 +1,55 @@
-import {BasicDto} from '../../../shared/dto/basic.dto';
-import {ApiProperty} from '@nestjs/swagger';
-import {OrderItemEntity} from '../entities/order-item.entity';
+import { ApiProperty } from '@nestjs/swagger';
+import { OrderItemEntity } from '../entities/order-item.entity';
+import { NoStatusDto } from '../../../shared/dto/no-status.dto';
 
-export class OrderItemDto extends BasicDto {
-    @ApiProperty({
-        description: 'Title',
-    })
-    title!: string;
+export class OrderItemDto extends NoStatusDto {
+  @ApiProperty({
+    description: 'Order id',
+    required: false,
+  })
+  orderId?: string;
 
-    @ApiProperty({
-        description: 'Quantity',
-    })
-    quantity!: number;
+  @ApiProperty({
+    description: 'Product id',
+  })
+  productId!: string;
 
-    @ApiProperty({
-        description: 'Price',
-    })
-    price!: number;
+  @ApiProperty({
+    description: 'Product quantity',
+  })
+  productQuantity!: number;
 
-    @ApiProperty({
-        description: 'Order id',
-    })
-    orderId!: string;
+  @ApiProperty({
+    description: 'Product title',
+    required: false,
+  })
+  productTitle?: string;
 
-    static fromEntity(entity?: OrderItemEntity) {
-        if (!entity) {
-            return;
-        }
-        const it = new OrderItemDto();
-        it.id = entity.id;
-        it.created = entity.created.valueOf();
-        it.updated = entity.updated.valueOf();
-        it.status = entity.status;
-        it.orderId = entity.orderId;
-        it.price = entity.price;
-        it.quantity = entity.quantity;
-        it.title = entity.title;
+  @ApiProperty({
+    description: 'Product price',
+    required: false,
+  })
+  productPrice?: number;
 
-        return it;
+  static fromEntity(entity?: OrderItemEntity) {
+    if (!entity) {
+      return;
     }
+    const it = new OrderItemDto();
+    it.id = entity.id;
+    it.created = entity.created.valueOf();
+    it.updated = entity.updated.valueOf();
+    it.orderId = entity.orderId;
+    it.productId = entity.productId;
+    it.productQuantity = entity.productQuantity;
+    it.productTitle = entity.productTitle;
+    it.productPrice = entity.productPrice;
 
-    static fromEntities(entities?: OrderItemEntity[]) {
-        if (!entities?.map) {
-            return;
-        }
-        return entities.map((entity) => this.fromEntity(entity));
-    }
+    return it;
+  }
+
+  static fromEntities(entities?: OrderItemEntity[]) {
+    if (!entities?.map) return;
+    return entities.map((entity) => this.fromEntity(entity));
+  }
 }

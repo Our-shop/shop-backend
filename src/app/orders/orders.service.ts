@@ -1,101 +1,76 @@
 import { Injectable } from '@nestjs/common';
 import { OrdersRepo } from './repos/orders.repo';
-import { OrderDto } from './dtos/order.dto';
 import { OrderEntity } from './entities/order.entity';
-import { NewOrderDto } from './dtos/new-order.dto';
 import { OrderItemsRepo } from '../order-items/repos/order-item.repo';
-import { OrderItemDto } from '../order-items/dtos/order-item.dto';
-import { ProductDto } from '../../shared/dto/product.dto';
+import { ProductsRepo } from '../../shared/repos/products.repo';
+import { OrderDto } from './dtos/order.dto';
 
 @Injectable()
 export class OrdersService {
   constructor(
     private readonly ordersRepo: OrdersRepo,
     private readonly orderItemsRepo: OrderItemsRepo,
+    private readonly productsRepo: ProductsRepo,
   ) {}
 
-  async getAllOrders(): Promise<OrderDto[]> {
-    return await this.ordersRepo.getList();
+  // ORDERS
+  public async getAllOrders(): Promise<OrderEntity[]> {
+    return await this.ordersRepo.getAllOrders();
   }
 
-  async getOrderById(id: string): Promise<OrderDto | string> {
-    return await this.ordersRepo.getOrder(id);
+  public async getOrderById(id: string): Promise<OrderEntity> {
+    return await this.ordersRepo.getOrderById(id);
   }
 
-  async getOrdersByUserId(userId: string): Promise<OrderDto[]> {
+  public async getOrdersByUserId(userId: string): Promise<OrderEntity[]> {
     return await this.ordersRepo.getOrdersByUserId(userId);
   }
 
-  // async createOrder(newOrder: NewOrderDto): Promise<OrderEntity | string> {
-  //   const arr = await this.checkProductsQuantity(newOrder);
-  //
-  //   // TODO rewrite this logic via reduce
-  //
-  //   if (arr.length > 0) {
-  //     let str = 'We have only:';
-  //     arr.forEach((el) => {
-  //       str += ` ${el.productInStock.quantity} available ${el.product.title}`;
-  //     });
-  //     str += ' on the stock now. Please change your order';
-  //     return str;
-  //   }
-  //
-  //   const totalAmount = newOrder.products.reduce(
-  //     (total, product) => total + product.price * product.quantity,
-  //     0,
-  //   );
-  //   const orderDto = new OrderDto();
-  //   Object.assign(orderDto, newOrder);
-  //   orderDto.totalAmount = totalAmount;
-  //
-  //   const createdOrder = await this.ordersRepo.addOrder(orderDto);
-  //
-  //   await this.createOrderItemsForOrder(newOrder, createdOrder);
-  //
-  //   return createdOrder;
-  // }
+  public async makeOrder(dto: OrderDto): Promise<OrderEntity | string> {
+    const orderItems = await this.orderItemsRepo.getAllByOrderId(dto.id);
+    const products = await this.productsRepo.getLackingProducts(orderItems);
 
-  async updateOrder(id: string, updatedOrderDto: Partial<OrderEntity>) {
-    return this.ordersRepo.updateOrder(id, updatedOrderDto);
+    if (products.length) {
+      return (
+        products.reduce((result, product) => {
+          return result + `| ${product.quantity} items of ${product.title} `;
+        }, 'We have only ') + '| on stock now. Please, change your order'
+      );
+    }
+
+    const orderedProducts = await this.productsRepo.orderProducts(orderItems);
+    const editedItems = await this.orderItemsRepo.editOrderItems(
+      dto.id,
+      orderedProducts,
+    );
+    dto.totalAmount = editedItems.reduce((result, item) => {
+      return result + item.productPrice * item.productQuantity;
+    }, 0);
+
+    return await this.ordersRepo.makeOrder(dto);
   }
 
-  async deleteOrder(orderId: string): Promise<OrderEntity | string> {
-    const order = await this.ordersRepo.deleteOrder(orderId);
-    await this.orderItemsRepo.deleteOrderItemsByOrderId(orderId);
-    return order;
+  public async archiveOrder(id: string): Promise<OrderEntity> {
+    return await this.ordersRepo.archiveOrder(id);
   }
 
-  private async createOrderItemsForOrder(
-    newOrder: NewOrderDto,
-    createdOrder: OrderEntity,
-  ) {
-    newOrder.products.map((product) => {
-      const newOrderItem = new OrderItemDto();
-      const newData = {
-        title: product.title,
-        price: product.price,
-        quantity: product.quantity,
-      };
-      Object.assign(newOrderItem, newData);
-      newOrderItem.orderId = createdOrder.id;
-      this.orderItemsRepo.addOrderItem(newOrderItem);
-    });
+  // CARTS
+  public async getAllCarts(): Promise<OrderEntity[]> {
+    return await this.ordersRepo.getAllCarts();
   }
 
-  // private async checkProductsQuantity(newOrder) {
-  //   return Promise.all(
-  //     newOrder.products.map(async (product) => {
-  //       const productInStock = ProductDto.fromEntity(
-  //         await this.productsRepo.getById(product.id),
-  //       );
-  //
-  //       if (product.quantity > productInStock.quantity) {
-  //         return {
-  //           product: product,
-  //           productInStock: productInStock,
-  //         };
-  //       }
-  //     }),
-  //   );
-  // }
+  public async getCartById(id: string): Promise<OrderEntity> {
+    return await this.ordersRepo.getCartById(id);
+  }
+
+  public async getCartByUserId(userId: string): Promise<OrderEntity> {
+    return await this.ordersRepo.getCartByUserId(userId);
+  }
+
+  public async editCartDiscount(
+    id: string,
+    dto: Partial<OrderEntity>,
+  ): Promise<OrderEntity> {
+    return await this.ordersRepo.editCartDiscount(id, dto);
+  }
 }

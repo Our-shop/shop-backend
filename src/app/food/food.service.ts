@@ -21,12 +21,8 @@ export class FoodService {
 
   public async editFood(
     foodId: string,
-    dto: Partial<FoodDto>,
+    dto: Partial<FoodEntity>,
   ): Promise<FoodEntity> {
     return await this.foodRepo.editOne(foodId, dto);
-  }
-
-  public async archiveFood(foodId: string): Promise<FoodEntity> {
-    return await this.foodRepo.archiveOne(foodId);
   }
 }
