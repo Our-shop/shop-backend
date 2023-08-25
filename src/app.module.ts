@@ -16,6 +16,9 @@ import { FoodModule } from './app/food/food.module';
 import { ClothesModule } from './app/clothes/clothes.module';
 import { ToysModule } from './app/toys/toys.module';
 import { NotificationModule } from './app/notifications/notification.module';
+import { RedisModule } from './redis/redis.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 
 @Module({
@@ -31,6 +34,7 @@ import { NotificationModule } from './app/notifications/notification.module';
       inject: [ConfigService],
     }),
     EventEmitterModule.forRoot(),
+    RedisModule,
     // ===== app =====
     ProductsModule,
     FoodModule,
@@ -45,6 +49,11 @@ import { NotificationModule } from './app/notifications/notification.module';
     NotificationModule
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
+    },
+  ],
 })
 export class AppModule {}

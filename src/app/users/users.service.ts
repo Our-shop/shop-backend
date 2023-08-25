@@ -8,6 +8,7 @@ import { UserEntity } from './entities/user.entity';
 import { OrdersRepo } from '../orders/repos/orders.repo';
 import { OrderItemsRepo } from '../order-items/repos/order-item.repo';
 import { UserSignUpForm } from '../auth/dtos/user-sign-up.form';
+import {UserDto} from './dtos/user.dto';
 
 
 @Injectable()
@@ -19,28 +20,19 @@ export class UsersService {
     private readonly orderItemsRepo: OrderItemsRepo,
   ) {}
 
-  @UseInterceptors(CacheInterceptor)
-  async getAllUsers() {
-    const cachedValue = await this.redisService.get('all-users');
-    if (cachedValue) {
-      console.log('CASHED');
-      return cachedValue;
-    }
-    const users = await this.userRepo.getList();
-    await this.redisService.set('all-users', users);
-    return users;
+  async getAllUsers(): Promise<UserDto[]> {
+    // const cachedValue = await this.redisService.get('all-users');
+    // if (cachedValue) {
+    //   console.log('CASHED');
+    //   console.log(cachedValue);
+    //   return cachedValue;
+    // }
+    return await this.userRepo.getList();
+    // await this.redisService.set('all-users', users);
   }
 
-  @UseInterceptors(CacheInterceptor)
-  async getUserById(id: string) {
-    const cachedValue = await this.redisService.get('user');
-    if (cachedValue) {
-      console.log('CASHED');
-      return cachedValue;
-    }
-    const user = await this.userRepo.getUser(id);
-    await this.redisService.set('user', user);
-    return user;
+  async getUserById(id: string): Promise<UserDto | string> {
+    return await this.userRepo.getUser(id);
   }
 
   async addUser(dto: UserSignUpForm): Promise<UserEntity> {
