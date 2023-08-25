@@ -15,7 +15,7 @@ export class UserRepo extends EntityRepository<UserEntity> {
     super(entityManager, UserEntity);
   }
 
-  async getList() {
+  async getList(): Promise<UserDto[]> {
     const entities = await this.findAll();
     const users = UserDto.fromEntities(entities);
     return users || [];

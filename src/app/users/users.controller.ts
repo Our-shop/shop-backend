@@ -5,27 +5,29 @@ import {
   Get,
   Param,
   Post,
-  Put,
+  Put, UseInterceptors,
 } from '@nestjs/common';
 import {ApiOperation, ApiTags} from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { UserDto } from './dtos/user.dto';
 import { UserEntity } from './entities/user.entity';
+import {CacheInterceptor} from '@nestjs/cache-manager';
 
 @ApiTags('users')
+// @UseInterceptors(CacheInterceptor)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @ApiOperation({ summary: 'Get all users' })
   @Get()
-  async getAllUsers() {
+  async getAllUsers(): Promise<UserDto[]> {
     return await this.usersService.getAllUsers();
   }
 
   @ApiOperation({ summary: 'Get user by id' })
   @Get('/:userId')
-  async getUserById(@Param('userId') id: string){
+  async getUserById(@Param('userId') id: string): Promise<UserDto | string> {
     return await this.usersService.getUserById(id);
   }
 
