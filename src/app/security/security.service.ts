@@ -96,7 +96,7 @@ export class SecurityService {
     return await bcrypt.hash(data, 10);
   }
 
-  async checkPassword(inputPassword, hashedPassword) {
-    return bcrypt.compare(inputPassword, hashedPassword);
+  async checkPassword(password, hashedPassword) {
+    return bcrypt.compare(password, hashedPassword);
   }
 }
