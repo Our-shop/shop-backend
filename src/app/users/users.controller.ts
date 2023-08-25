@@ -19,13 +19,13 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Get all users' })
   @Get()
-  async getAllUsers(): Promise<UserDto[]> {
+  async getAllUsers() {
     return await this.usersService.getAllUsers();
   }
 
   @ApiOperation({ summary: 'Get user by id' })
   @Get('/:userId')
-  async getUserById(@Param('userId') id: string): Promise<UserDto | string> {
+  async getUserById(@Param('userId') id: string){
     return await this.usersService.getUserById(id);
   }
 

@@ -3,6 +3,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './config/database.config';
 import appConfig from './config/app.config';
+
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { UsersModule } from './app/users/users.module';
 import { UserRolesModule } from './app/user-roles/user-roles.module';
@@ -15,6 +16,7 @@ import { FoodModule } from './app/food/food.module';
 import { ClothesModule } from './app/clothes/clothes.module';
 import { ToysModule } from './app/toys/toys.module';
 import { NotificationModule } from './app/notifications/notification.module';
+
 
 @Module({
   imports: [
