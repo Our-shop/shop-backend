@@ -11,10 +11,11 @@ import { OrderItemsModule } from './app/order-items/order-items.module';
 import { DeliveryModule } from './app/delivery/delivery.module';
 import { CartsModule } from './app/carts/carts.module';
 import { CartItemsModule } from './app/cart-items/cart-items.module';
-import {AuthModule} from './app/auth/auth.module';
+import { AuthModule } from './app/auth/auth.module';
 import { FoodModule } from './app/food/food.module';
 import { ClothesModule } from './app/clothes/clothes.module';
 import { ToysModule } from './app/toys/toys.module';
+import { NotificationModule } from './app/notifications/notification.module';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { ToysModule } from './app/toys/toys.module';
     DeliveryModule,
     CartsModule,
     CartItemsModule,
-    AuthModule
+    AuthModule,
+    NotificationModule
   ],
   controllers: [],
   providers: [],
