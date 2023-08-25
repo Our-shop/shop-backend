@@ -49,6 +49,7 @@ export class SecurityService {
     };
   }
 
+  // TODO Check validation logic
     async refreshTokens(accessToken: string, refreshToken: string) {
         const validTokens =
             this.validateAccessToken(accessToken) &&

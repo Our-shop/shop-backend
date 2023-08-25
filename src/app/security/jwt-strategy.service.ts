@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ExtractJwt } from 'passport-jwt';
+import { ExtractJwt, VerifiedCallback } from 'passport-jwt';
 import { Strategy } from 'passport-local';
 import { SecurityService } from 'src/app/security/security.service';
-import { UserSessionDto } from 'src/app/security/dtos/user-session.dto';
 import { ErrorCodes } from 'src/shared/enums/error-codes.enum';
 import { PassportStrategy } from '@nestjs/passport';
+import { UserSessionDto } from './dtos/user-session.dto';
 
 @Injectable()
 export class JwtStrategyService extends PassportStrategy(
@@ -22,14 +22,15 @@ export class JwtStrategyService extends PassportStrategy(
       {
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         passReqToCallback: true,
-        secretOrKey: configService.get<string>('app.rt_jtw_secret'),
+        secretOrKey: configService.get<string>('app.jwt_secret'),
       },
-      // async (req, payload, next) => await this.verify(req, payload, next),
+      async (req: Request, payload: UserSessionDto, next: VerifiedCallback) => this.verify(req, payload, next),
     );
   }
 
-  public async verify(req, payload: UserSessionDto, done) {
+  public async verify(req, payload: UserSessionDto, done: VerifiedCallback) {
     console.log(payload, 'payload');
+    done(null, payload);
     const user = await this.securityService.getUserById(payload.id);
 
     if (!user) {
