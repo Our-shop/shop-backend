@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Post, Put} from '@nestjs/common';
+import {Body, Controller, Delete, Get, NotFoundException, Param, Post, Put} from '@nestjs/common';
 import {ApiOperation, ApiTags} from '@nestjs/swagger';
 import {UserRolesService} from './user-roles.service';
 import {UserRoleDto} from './dtos/user-role.dto';
@@ -18,7 +18,11 @@ export class UserRolesController {
     @ApiOperation({ summary: 'Get user role by id' })
     @Get('/:userRoleId')
     async getUserRoleById(@Param('userRoleId') id: string): Promise<UserRoleDto | string> {
-        return await this.userRolesService.getUserRoleById(id);
+        const found = await this.userRolesService.getUserRoleById(id);
+        if (!found) {
+            throw new NotFoundException(`User role with id: ${id} not found`);
+        }
+        return UserRoleDto.fromEntity(found);
     }
 
     @ApiOperation({ summary: 'Create user role' })

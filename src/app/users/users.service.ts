@@ -4,6 +4,7 @@ import { UserDto } from './dtos/user.dto';
 import { UserEntity } from './entities/user.entity';
 import { OrdersRepo } from '../orders/repos/orders.repo';
 import { OrderItemsRepo } from '../order-items/repos/order-item.repo';
+import { UserSignUpForm } from '../auth/dtos/user-sign-up.form';
 
 @Injectable()
 export class UsersService {
@@ -21,8 +22,8 @@ export class UsersService {
     return await this.userRepo.getUser(id);
   }
 
-  async addUser(dto: UserDto): Promise<UserEntity> {
-    const newUser = await this.userRepo.addUser(dto);
+  async addUser(dto: UserSignUpForm): Promise<UserEntity> {
+    const newUser = await this.userRepo.addNewUser(dto);
     await this.ordersRepo.addNewCart(newUser.id);
 
     return newUser;

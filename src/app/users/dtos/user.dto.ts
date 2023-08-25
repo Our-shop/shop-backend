@@ -26,7 +26,7 @@ export class UserDto extends BasicDto {
   // @ApiProperty({
   //   description: 'User refresh token',
   // })
-  // refreshToken!: string;
+  // refreshToken?: string;
 
   static fromEntity(entity?: UserEntity) {
     if (!entity) {

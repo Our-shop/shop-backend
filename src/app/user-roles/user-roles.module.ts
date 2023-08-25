@@ -3,6 +3,7 @@ import {MikroOrmModule} from '@mikro-orm/nestjs';
 import {UserRoleEntity} from './entities/user-role.entity';
 import {UserRolesService} from './user-roles.service';
 import {UserRolesController} from './user-roles.controller';
+import {UserRoleRepo} from './repos/user-role.repo';
 
 @Module({
     imports: [
@@ -11,6 +12,6 @@ import {UserRolesController} from './user-roles.controller';
         }),
     ],
     providers: [UserRolesService],
-    controllers: [UserRolesController],
+    controllers: [UserRolesController]
 })
 export class UserRolesModule {}

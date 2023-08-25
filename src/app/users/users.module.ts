@@ -5,14 +5,18 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { UserEntity } from './entities/user.entity';
 import { OrdersRepo } from '../orders/repos/orders.repo';
 import { OrderItemsRepo } from '../order-items/repos/order-item.repo';
+import { UserRepo } from './repos/user.repo';
+import { UserRoleRepo } from '../user-roles/repos/user-role.repo';
+import { UserRoleEntity } from '../user-roles/entities/user-role.entity';
 
 @Module({
   imports: [
     MikroOrmModule.forFeature({
-      entities: [UserEntity],
+      entities: [UserEntity, UserRoleEntity],
     }),
   ],
-  providers: [UsersService, OrdersRepo, OrderItemsRepo],
   controllers: [UsersController],
+  providers: [UsersService, OrdersRepo, OrderItemsRepo , UserRepo, UserRoleRepo],
+  exports: [UserRepo]
 })
 export class UsersModule {}

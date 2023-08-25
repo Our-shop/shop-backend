@@ -9,10 +9,12 @@ import { UserRolesModule } from './app/user-roles/user-roles.module';
 import { OrdersModule } from './app/orders/orders.module';
 import { OrderItemsModule } from './app/order-items/order-items.module';
 import { DeliveryModule } from './app/delivery/delivery.module';
+import { ProductsModule } from './app/products/products.module';
+import { AuthModule } from './app/auth/auth.module';
 import { FoodModule } from './app/food/food.module';
 import { ClothesModule } from './app/clothes/clothes.module';
 import { ToysModule } from './app/toys/toys.module';
-import { ProductsModule } from './app/products/products.module';
+import { NotificationModule } from './app/notifications/notification.module';
 
 @Module({
   imports: [
@@ -37,6 +39,8 @@ import { ProductsModule } from './app/products/products.module';
     OrdersModule,
     OrderItemsModule,
     DeliveryModule,
+    AuthModule,
+    NotificationModule
   ],
   controllers: [],
   providers: [],

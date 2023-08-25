@@ -4,8 +4,9 @@ import { BasicEntity } from '../../../shared/entities/basic.entity';
 import { DeliveryEntity } from '../../delivery/entities/delivery.entity';
 import { UserRoleEntity } from '../../user-roles/entities/user-role.entity';
 import { OrderEntity } from '../../orders/entities/order.entity';
+import { RefreshTokenEntity } from '../../refresh-token/entity/refresh-token.entity';
 
-@Unique({ properties: ['email'] })
+
 @Entity({ tableName: 'users', customRepository: () => UserRepo })
 export class UserEntity extends BasicEntity {
   @Property({ name: 'user_name' })
@@ -14,6 +15,7 @@ export class UserEntity extends BasicEntity {
   @Property({ name: 'password' })
   password!: string;
 
+  @Unique()
   @Property({ name: 'email' })
   email!: string;
 
@@ -21,7 +23,7 @@ export class UserEntity extends BasicEntity {
   roleId!: string;
 
   // @Property({ name: 'refresh_token' })
-  // refreshToken!: string;
+  // refreshToken?: string;
 
   @ManyToOne({
     entity: () => UserRoleEntity,
@@ -38,4 +40,7 @@ export class UserEntity extends BasicEntity {
 
   @OneToMany(() => DeliveryEntity, (e) => e.user)
   deliveries?: DeliveryEntity[];
+
+  @OneToMany(() => RefreshTokenEntity, e => e.user)
+  refreshTokens?: RefreshTokenEntity[];
 }
