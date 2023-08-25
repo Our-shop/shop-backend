@@ -7,7 +7,7 @@ import {
     Req,
     UseGuards,
     Headers,
-    HttpCode
+    HttpCode, UnauthorizedException
 } from '@nestjs/common';
 import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {AuthService} from './auth.service';
@@ -69,33 +69,34 @@ export class AuthController {
         );
     }
 
+    // @Post("sign-out")
+    // // @UseGuards(JwtPermissionsGuard)
+    // // @RestrictRequest(UserPermissions.SignOut)
+    // async signOut(@CurrentUser() user: UserSessionDto) {
+    //     console.log(user);
+    //     return null;
+    // }
+
     @ApiOperation({ summary: "Sign out" })
     @ApiResponse({
         status: HttpStatus.OK,
         description: "HttpStatus:200:OK",
         type: null
     })
-    @Post("sign-out")
-    @HttpCode(200)
-    async signOut(@Headers('Authorization') token:string) {
-      const user = this.refreshTokenRepo.getUserByToken(token);
-      if (!user) {
-          return { message: 'User already sign out' };
-      }
-      await this.refreshTokenRepo.deleteRefreshToken(token);
-      return { message: 'User successfully sign out' };
-
-      // clean up local storage on the client side
-
+    @Post('sign-out')
+    async signOut(@Headers('Authorization') token: string) {
+        if (!token) {
+            throw new UnauthorizedException('Refresh token is missing');
+        }
+        const entity = await this.refreshTokenRepo.getTokenData(token);
+        //console.log('entity' + entity);
+        if (!entity) {
+            throw new UnauthorizedException('Token invalid');
+        }
+        const tokenEntity = await this.refreshTokenRepo.deleteRefreshToken(token);
+        //console.log(tokenEntity);
+        return { message: 'Signed out successfully' };
     }
-
-    //@Post("sign-out")
-    // @UseGuards(JwtPermissionsGuard)
-    // @RestrictRequest(UserPermissions.SignOut)
-    // async signOut(@CurrentUser() user: UserSessionDto) {
-    //     console.log(user);
-    //     return null;
-    // }
 
     // @Post('test')
     // @UseGuards(JwtPermissionsGuard)
