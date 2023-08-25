@@ -1,64 +1,95 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
-import {EntityManager, EntityRepository} from '@mikro-orm/postgresql';
-import {OrderEntity} from '../entities/order.entity';
-import {BasicStatuses} from '../../../shared/enums/basic-statuses.enum';
-import {OrderDto} from '../dtos/order.dto';
-
+import { Injectable } from '@nestjs/common';
+import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
+import { OrderEntity } from '../entities/order.entity';
+import { BasicStatuses } from '../../../shared/enums/basic-statuses.enum';
+import { OrderStatuses } from '../enums/order-statuses.enum';
+import { OrderDto } from '../dtos/order.dto';
 
 @Injectable()
 export class OrdersRepo extends EntityRepository<OrderEntity> {
-    constructor(private readonly entityManager: EntityManager) {
-        super(entityManager, OrderEntity);
-    }
+  constructor(private readonly entityManager: EntityManager) {
+    super(entityManager, OrderEntity);
+  }
 
-    async getList() {
-        const entities = await this.findAll();
-        const orders = OrderDto.fromEntities(entities);
-        return orders || [];
-    }
+  // ORDERS
+  public async getAllOrders(): Promise<OrderEntity[]> {
+    return await this.find({ orderStatus: OrderStatuses.InOrder });
+  }
 
-    async getOrder(id: string): Promise<OrderDto | string> {
-        const found = await this.findOne({ id });
-        if (!found) {
-            throw new NotFoundException(`Order with id: ${id} not found`);
-        }
-        const order = OrderDto.fromEntity(found);
-        return order || null;
-    }
+  public async getOrderById(id: string): Promise<OrderEntity> {
+    return await this.findOne({ id, orderStatus: OrderStatuses.InOrder });
+  }
 
-    async getOrdersByUserId(userId: string): Promise<OrderDto[]> {
-        const found = await this.find({userId: userId});
-        if (!found) {
-            throw new NotFoundException(`Order with user id: ${userId} not found`);
-        }
-        const OrdersList = OrderDto.fromEntities(found);
-        return OrdersList || null;
-    }
+  public async getAllCarts(): Promise<OrderEntity[]> {
+    return await this.find({ orderStatus: OrderStatuses.InCart });
+  }
 
-    async addOrder(dto: OrderDto): Promise<OrderEntity> {
-        const newOrder = await this.create({
-            deliveryId: dto.deliveryId,
-            userId: dto.userId,
-            totalAmount: dto.totalAmount,
-        });
-        await this.entityManager.persistAndFlush(newOrder);
-        return newOrder;
-    }
+  public async getOrdersByUserId(userId: string): Promise<OrderEntity[]> {
+    return await this.find({ userId, orderStatus: OrderStatuses.InOrder });
+  }
 
-    async updateOrder(
-        id: string,
-        updateData: Partial<OrderEntity>,
-    ): Promise<OrderEntity | null> {
-        const order = await this.findOne({ id });
-        Object.assign(order, updateData);
-        await this.getEntityManager().flush();
-        return order ? order : null;
-    }
+  public async makeOrder(dto: OrderDto): Promise<OrderEntity> {
+    const newOrder = await this.findOne({ id: dto.id });
+    newOrder.orderStatus = OrderStatuses.InOrder;
+    newOrder.deliveryId = dto.deliveryId;
+    newOrder.totalAmount = dto.totalAmount;
+    await this.entityManager.persistAndFlush(newOrder);
 
-    async deleteOrder(id: string): Promise<OrderEntity | string> {
-        const found = await this.findOne({ id });
-        found.status = BasicStatuses.Archived;
-        await this.entityManager.persistAndFlush(found);
-        return found;
-    }
+    const newCart = await this.create({
+      userId: newOrder.userId,
+      discount: 0,
+    });
+    await this.entityManager.persistAndFlush(newCart);
+
+    return newOrder;
+  }
+
+  public async archiveOrder(id: string): Promise<OrderEntity> {
+    const orderToArchive = await this.findOne({ id });
+    orderToArchive.status = BasicStatuses.Archived;
+    await this.entityManager.persistAndFlush(orderToArchive);
+
+    return orderToArchive;
+  }
+
+  // CARTS
+  public async getCartById(id: string): Promise<OrderEntity> {
+    return await this.findOne({ id, orderStatus: OrderStatuses.InCart });
+  }
+
+  public async getCartByUserId(userId: string): Promise<OrderEntity> {
+    return await this.findOne({ userId, orderStatus: OrderStatuses.InCart });
+  }
+
+  public async addNewCart(userId: string): Promise<OrderEntity> {
+    const newCart = await this.create({
+      userId: userId,
+      discount: 10,
+    });
+    await this.entityManager.persistAndFlush(newCart);
+
+    return newCart;
+  }
+
+  public async editCartDiscount(
+    id: string,
+    dto: Partial<OrderEntity>,
+  ): Promise<OrderEntity> {
+    const cartToEdit = await this.findOne({ id });
+    cartToEdit.discount = dto.discount;
+    await this.entityManager.persistAndFlush(cartToEdit);
+
+    return cartToEdit;
+  }
+
+  public async archiveCartByUserId(userId: string): Promise<OrderEntity> {
+    const cartToArchive = await this.findOne({
+      userId: userId,
+      orderStatus: OrderStatuses.InCart,
+    });
+    cartToArchive.status = BasicStatuses.Archived;
+    await this.entityManager.persistAndFlush(cartToArchive);
+
+    return cartToArchive;
+  }
 }

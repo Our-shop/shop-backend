@@ -1,32 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import {OrderItemsRepo} from './repos/order-item.repo';
-import {OrderItemDto} from './dtos/order-item.dto';
-import {OrderItemEntity} from './entities/order-item.entity';
+import { OrderItemsRepo } from './repos/order-item.repo';
+import { OrderItemDto } from './dtos/order-item.dto';
+import { OrderItemEntity } from './entities/order-item.entity';
 
 @Injectable()
 export class OrderItemsService {
-    constructor(private readonly orderItemsRepo: OrderItemsRepo) {}
+  constructor(private readonly orderItemsRepo: OrderItemsRepo) {}
 
-    async getAllOrderItems(): Promise<OrderItemDto[]> {
-        return await this.orderItemsRepo.getList();
-    }
+  public async getAllOrderItems(): Promise<OrderItemEntity[]> {
+    return await this.orderItemsRepo.getAll();
+  }
 
-    async getOrderItemById(id: string): Promise<OrderItemDto | string> {
-        return await this.orderItemsRepo.getOrderItem(id);
-    }
+  public async getById(id: string): Promise<OrderItemEntity> {
+    return await this.orderItemsRepo.getById(id);
+  }
 
-    async addOrderItem(newOrderItem: OrderItemDto): Promise<OrderItemEntity> {
-        return this.orderItemsRepo.addOrderItem(newOrderItem);
-    }
+  public async getAllByOrderId(id: string): Promise<OrderItemEntity[]> {
+    return await this.orderItemsRepo.getAllByOrderId(id);
+  }
 
-    async updateOrderItem(id: string, updatedOrderItemDto: Partial<OrderItemEntity>) {
-        return this.orderItemsRepo.updateOrderItem(id, updatedOrderItemDto);
-    }
+  public async addOrderItem(dto: OrderItemDto): Promise<OrderItemEntity> {
+    return this.orderItemsRepo.addOrderItem(dto);
+  }
 
-    async deleteOrderItem(id: string): Promise<OrderItemEntity | string> {
-        return this.orderItemsRepo.deleteOrderItem(id);
-    }
+  public async editProductQuantity(
+    id: string,
+    dto: Partial<OrderItemEntity>,
+  ): Promise<OrderItemEntity> {
+    return this.orderItemsRepo.editProductQuantity(id, dto);
+  }
+
+  public async deleteOrderItem(id: string): Promise<OrderItemEntity> {
+    return this.orderItemsRepo.deleteOrderItem(id);
+  }
+
+  public async deleteAllByCartId(orderId: string): Promise<OrderItemEntity[]> {
+    return this.orderItemsRepo.deleteAllByCartId(orderId);
+  }
 }
-
-
-

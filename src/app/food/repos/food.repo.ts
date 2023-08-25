@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
-import { BasicStatuses } from '../../../shared/enums/basic-statuses.enum';
 import { FoodEntity } from '../entities/food.entity';
 import { FoodDto } from '../dtos/food.dto';
 import { ProductCategories } from '../../../shared/enums/product-categories.enum';
@@ -35,19 +34,11 @@ export class FoodRepo extends EntityRepository<FoodEntity> {
     return newFood;
   }
 
-  public async editOne(id: string, dto: Partial<FoodDto>): Promise<FoodEntity> {
+  public async editOne(id: string, dto: Partial<FoodEntity>): Promise<FoodEntity> {
     const foodToEdit = await this.findOne({ id });
     Object.assign(foodToEdit, dto);
     await this.entityManager.persistAndFlush(foodToEdit);
 
     return foodToEdit;
-  }
-
-  public async archiveOne(id: string): Promise<FoodEntity> {
-    const foodToArchive = await this.findOne({ id });
-    foodToArchive.status = BasicStatuses.Archived;
-    await this.entityManager.persistAndFlush(foodToArchive);
-
-    return foodToArchive;
   }
 }

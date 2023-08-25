@@ -1,15 +1,8 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Param,
-  Body,
-  Delete,
-  Put,
-} from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Put } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ToysService } from './toys.service';
 import { ToyDto } from './dtos/toy.dto';
+import { ToyEntity } from './entities/toy.entity';
 
 @ApiTags('toys')
 @Controller('toys')
@@ -44,17 +37,9 @@ export class ToysController {
   @Put(':toyId')
   public async editToy(
     @Param('toyId') toyId: string,
-    @Body() dto: Partial<ToyDto>,
+    @Body() dto: Partial<ToyEntity>,
   ) {
     const entity = await this.toysService.editToy(toyId, dto);
-
-    return ToyDto.fromEntity(entity) || null;
-  }
-
-  @ApiOperation({ summary: 'Archive toy by id' })
-  @Delete(':toyId')
-  public async archiveToy(@Param('toyId') toyId: string) {
-    const entity = await this.toysService.archiveToy(toyId);
 
     return ToyDto.fromEntity(entity) || null;
   }

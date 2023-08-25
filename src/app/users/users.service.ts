@@ -2,19 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { UserRepo } from './repos/user.repo';
 import { UserDto } from './dtos/user.dto';
 import { UserEntity } from './entities/user.entity';
-import { CartsRepo } from '../carts/repos/carts.repo';
-import { CartItemsRepo } from '../cart-items/repos/cart-items.repo';
-import {UserSignUpForm} from '../auth/dtos/user-sign-up.form';
-// import {UserRoleDto} from '../user-roles/dtos/user-role.dto';
-// import {UserRoleRepo} from '../user-roles/repos/user-role.repo';
+import { OrdersRepo } from '../orders/repos/orders.repo';
+import { OrderItemsRepo } from '../order-items/repos/order-item.repo';
+import { UserSignUpForm } from '../auth/dtos/user-sign-up.form';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly userRepo: UserRepo,
-    private readonly cartRepo: CartsRepo,
-    private readonly cartItemsRepo: CartItemsRepo,
-    // private readonly userRoleRepo: UserRoleRepo,
+    private readonly ordersRepo: OrdersRepo,
+    private readonly orderItemsRepo: OrderItemsRepo,
   ) {}
 
   async getAllUsers(): Promise<UserDto[]> {
@@ -26,10 +23,9 @@ export class UsersService {
   }
 
   async addUser(dto: UserSignUpForm): Promise<UserEntity> {
-    // const userRole = await this.userRoleRepo.getUserRole(dto.roleId);
-    // const roleDto =  UserRoleDto.fromEntity(userRole);
     const newUser = await this.userRepo.addNewUser(dto);
-    await this.cartRepo.addByUserId(newUser.id);
+    await this.ordersRepo.addNewCart(newUser.id);
+
     return newUser;
   }
 
@@ -38,8 +34,8 @@ export class UsersService {
   }
 
   async deleteUser(id: string): Promise<UserEntity | string> {
-    const archivedCart = await this.cartRepo.archiveByUserId(id);
-    await this.cartItemsRepo.archiveAllByCartId(archivedCart.id);
+    const archivedCart = await this.ordersRepo.archiveCartByUserId(id);
+    await this.orderItemsRepo.deleteAllByCartId(archivedCart.id);
 
     return await this.userRepo.deleteUser(id);
   }

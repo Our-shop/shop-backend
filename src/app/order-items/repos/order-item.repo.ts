@@ -1,64 +1,71 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
-import {EntityManager, EntityRepository} from '@mikro-orm/postgresql';
-import {OrderItemEntity} from '../entities/order-item.entity';
-import {BasicStatuses} from '../../../shared/enums/basic-statuses.enum';
-import {OrderItemDto} from '../dtos/order-item.dto';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
+import { OrderItemEntity } from '../entities/order-item.entity';
+import { OrderItemDto } from '../dtos/order-item.dto';
+import { ProductEntity } from '../../../shared/entities/product.entity';
 
 @Injectable()
 export class OrderItemsRepo extends EntityRepository<OrderItemEntity> {
-    constructor(private readonly entityManager: EntityManager) {
-        super(entityManager, OrderItemEntity);
-    }
+  constructor(private readonly entityManager: EntityManager) {
+    super(entityManager, OrderItemEntity);
+  }
 
-    async getList() {
-        const entities = await this.findAll();
-        const orderItems = OrderItemDto.fromEntities(entities);
-        return orderItems || [];
-    }
+  public async getAll(): Promise<OrderItemEntity[]> {
+    return await this.findAll();
+  }
 
-    async getOrderItem(id: string): Promise<OrderItemDto | string> {
-        const found = await this.findOne({ id });
-        if (!found) {
-            throw new NotFoundException(`Order item with id: ${id} not found`);
-        }
-        const orderItem = OrderItemDto.fromEntity(found);
-        return orderItem || null;
-    }
+  public async getById(id: string): Promise<OrderItemEntity> {
+    return await this.findOne({ id });
+  }
 
-    async addOrderItem(dto: OrderItemDto): Promise<OrderItemEntity> {
-        const newOrderItem = await this.create({
-            orderId: dto.orderId,
-            price: dto.price,
-            quantity: dto.quantity,
-            title: dto.title,
-        });
-        await this.entityManager.persistAndFlush(newOrderItem);
-        return newOrderItem;
-    }
+  public async getAllByOrderId(orderId: string): Promise<OrderItemEntity[]> {
+    return await this.find({ orderId: orderId });
+  }
 
-    async updateOrderItem(
-        id: string,
-        updateData: Partial<OrderItemEntity>,
-    ): Promise<OrderItemEntity | null> {
-        const orderItem = await this.findOne({ id });
-        Object.assign(orderItem, updateData);
-        await this.entityManager.flush();
-        return orderItem ? orderItem : null;
-    }
+  public async addOrderItem(dto: OrderItemDto): Promise<OrderItemEntity> {
+    const newOrderItem = await this.create({
+      orderId: dto.orderId,
+      productId: dto.productId,
+    });
+    await this.entityManager.persistAndFlush(newOrderItem);
 
-    async deleteOrderItem(id: string): Promise<OrderItemEntity | string> {
-        const found = await this.findOne({ id });
-        found.status = BasicStatuses.Archived;
-        await this.entityManager.persistAndFlush(found);
-        return found;
-    }
+    return newOrderItem;
+  }
 
-    async deleteOrderItemsByOrderId(orderId: string):Promise<OrderItemEntity[] | string> {
-        const foundItems = await this.find({orderId: orderId});
-        foundItems.map((item) => {
-            item.status = BasicStatuses.Archived;
-            this.entityManager.persistAndFlush(item);
-        });
-        return foundItems;
-    }
+  public async editProductQuantity(
+    id: string,
+    dto: Partial<OrderItemEntity>,
+  ): Promise<OrderItemEntity> {
+    const itemToEdit = await this.findOne({ id });
+    itemToEdit.productQuantity = dto.productQuantity;
+    await this.entityManager.persistAndFlush(itemToEdit);
+
+    return itemToEdit;
+  }
+
+  public async deleteOrderItem(id: string): Promise<OrderItemEntity> {
+    const itemToDelete = await this.findOne({ id });
+    await this.entityManager.removeAndFlush(itemToDelete);
+
+    return itemToDelete;
+  }
+
+  public async deleteAllByCartId(orderId: string): Promise<OrderItemEntity[]> {
+    const itemsToDelete = await this.find({ orderId: orderId });
+    await this.entityManager.removeAndFlush(itemsToDelete);
+
+    return itemsToDelete;
+  }
+
+  public async editOrderItems(orderId: string, products: ProductEntity[]) {
+    const itemsToEdit = await this.find({ orderId: orderId });
+    itemsToEdit.forEach((item) => {
+      const product = products.find((p) => p.id === item.productId);
+      item.productTitle = product.title;
+      item.productPrice = product.price;
+    });
+    await this.entityManager.persistAndFlush(itemsToEdit);
+
+    return itemsToEdit;
+  }
 }
