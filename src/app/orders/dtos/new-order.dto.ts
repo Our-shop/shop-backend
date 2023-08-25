@@ -1,5 +1,5 @@
 import {ApiProperty} from '@nestjs/swagger';
-import {ProductDto} from '../../products/dtos/product.dto';
+import {ProductDto} from '../../../shared/dto/product.dto';
 import {ValidateNested} from 'class-validator';
 
 export class NewOrderDto {
