@@ -4,6 +4,9 @@ import { UserDto } from './dtos/user.dto';
 import { UserEntity } from './entities/user.entity';
 import { CartsRepo } from '../carts/repos/carts.repo';
 import { CartItemsRepo } from '../cart-items/repos/cart-items.repo';
+import {UserSignUpForm} from '../auth/dtos/user-sign-up.form';
+// import {UserRoleDto} from '../user-roles/dtos/user-role.dto';
+// import {UserRoleRepo} from '../user-roles/repos/user-role.repo';
 
 @Injectable()
 export class UsersService {
@@ -11,6 +14,7 @@ export class UsersService {
     private readonly userRepo: UserRepo,
     private readonly cartRepo: CartsRepo,
     private readonly cartItemsRepo: CartItemsRepo,
+    // private readonly userRoleRepo: UserRoleRepo,
   ) {}
 
   async getAllUsers(): Promise<UserDto[]> {
@@ -21,10 +25,11 @@ export class UsersService {
     return await this.userRepo.getUser(id);
   }
 
-  async addUser(dto: UserDto): Promise<UserEntity> {
-    const newUser = await this.userRepo.addUser(dto);
+  async addUser(dto: UserSignUpForm): Promise<UserEntity> {
+    // const userRole = await this.userRoleRepo.getUserRole(dto.roleId);
+    // const roleDto =  UserRoleDto.fromEntity(userRole);
+    const newUser = await this.userRepo.addNewUser(dto);
     await this.cartRepo.addByUserId(newUser.id);
-
     return newUser;
   }
 

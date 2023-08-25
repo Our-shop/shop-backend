@@ -11,4 +11,9 @@ export enum ErrorCodes {
   InvalidStatus_UserInactive = 'errors.invalid-status.user-inactive',
 
   NotExists_User = 'errors.not-exists.user',
+  Exists_User = 'errors.already-exists.user',
+
+  NotCorrect_Password = 'errors.not-correct.password',
+
+  InvalidTokens = 'errors.invalid-tokens',
 }
