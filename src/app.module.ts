@@ -15,6 +15,12 @@ import { FoodModule } from './app/food/food.module';
 import { ClothesModule } from './app/clothes/clothes.module';
 import { ToysModule } from './app/toys/toys.module';
 import { NotificationModule } from './app/notifications/notification.module';
+import {
+  AcceptLanguageResolver,
+  HeaderResolver,
+  I18nModule,
+  QueryResolver,
+} from 'nestjs-i18n';
 
 @Module({
   imports: [
@@ -23,12 +29,37 @@ import { NotificationModule } from './app/notifications/notification.module';
       load: [databaseConfig, appConfig],
       isGlobal: true,
     }),
+    EventEmitterModule.forRoot(),
+    I18nModule.forRoot({
+      fallbackLanguage: 'en',
+      loaderOptions: {
+        path: 'src/resources/i18n/',
+        watch: true,
+      },
+      resolvers: [
+        { use: QueryResolver, options: ['lang'] },
+        AcceptLanguageResolver,
+        new HeaderResolver(['x-lang']),
+      ],
+    }),
     MikroOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => config.get('database'),
       inject: [ConfigService],
     }),
-    EventEmitterModule.forRoot(),
+    // I18nModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   useFactory: (config: ConfigService) => ({
+    //     fallbackLanguage: 'en',
+    //   }),
+    //   inject: [ConfigService],
+    //   global: true,
+    //   fallbackLanguage: 'en',
+    //   loaderOptions: {
+    //     path: 'src/resources/i18n/',
+    //     watch: true,
+    //   },
+    // }),
     // ===== app =====
     ProductsModule,
     FoodModule,
@@ -40,7 +71,7 @@ import { NotificationModule } from './app/notifications/notification.module';
     OrderItemsModule,
     DeliveryModule,
     AuthModule,
-    NotificationModule
+    NotificationModule,
   ],
   controllers: [],
   providers: [],
