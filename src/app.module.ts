@@ -16,10 +16,15 @@ import { FoodModule } from './app/food/food.module';
 import { ClothesModule } from './app/clothes/clothes.module';
 import { ToysModule } from './app/toys/toys.module';
 import { NotificationModule } from './app/notifications/notification.module';
+import {
+  AcceptLanguageResolver,
+  HeaderResolver,
+  I18nModule,
+  QueryResolver,
+} from 'nestjs-i18n';
 import { RedisModule } from './redis/redis.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CacheInterceptor } from '@nestjs/cache-manager';
-
 
 @Module({
   imports: [
@@ -27,6 +32,19 @@ import { CacheInterceptor } from '@nestjs/cache-manager';
       envFilePath: '.env',
       load: [databaseConfig, appConfig],
       isGlobal: true,
+    }),
+    EventEmitterModule.forRoot(),
+    I18nModule.forRoot({
+      fallbackLanguage: 'en',
+      loaderOptions: {
+        path: 'src/resources/i18n/',
+        watch: true,
+      },
+      resolvers: [
+        { use: QueryResolver, options: ['lang'] },
+        AcceptLanguageResolver,
+        new HeaderResolver(['x-lang']),
+      ],
     }),
     MikroOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -46,7 +64,7 @@ import { CacheInterceptor } from '@nestjs/cache-manager';
     OrderItemsModule,
     DeliveryModule,
     AuthModule,
-    NotificationModule
+    NotificationModule,
   ],
   controllers: [],
   providers: [
