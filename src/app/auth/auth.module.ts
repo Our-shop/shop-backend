@@ -6,15 +6,17 @@ import {UserEntity} from '../users/entities/user.entity';
 import {UserRepo} from '../users/repos/user.repo';
 import {SecurityModule} from '../security/security.module';
 import {UserRoleEntity} from '../user-roles/entities/user-role.entity';
+import {RefreshTokenRepo} from '../refresh-token/repo/refresh-token.repo';
+import {RefreshTokenEntity} from '../refresh-token/entity/refresh-token.entity';
 
 @Module({
     imports: [
         MikroOrmModule.forFeature({
-            entities: [UserEntity, UserRoleEntity],
+            entities: [UserEntity, UserRoleEntity, RefreshTokenEntity],
         }),
         SecurityModule
     ],
-    providers: [AuthService, UserRepo],
+    providers: [AuthService, UserRepo, RefreshTokenRepo],
     controllers: [AuthController],
 })
 export class AuthModule {}

@@ -49,7 +49,6 @@ export class SecurityService {
     };
   }
 
-  // TODO Check validation logic
     async refreshTokens(accessToken: string, refreshToken: string) {
         const validTokens =
             this.validateAccessToken(accessToken) &&
@@ -96,7 +95,9 @@ export class SecurityService {
     return await bcrypt.hash(data, 10);
   }
 
-  async checkPassword(inputPassword, hashedPassword) {
-    return bcrypt.compare(inputPassword, hashedPassword);
+  async checkPassword(password, hashedPassword) {
+    return bcrypt.compare(password, hashedPassword);
   }
+
+
 }

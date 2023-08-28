@@ -3,6 +3,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './config/database.config';
 import appConfig from './config/app.config';
+
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { UsersModule } from './app/users/users.module';
 import { UserRolesModule } from './app/user-roles/user-roles.module';
@@ -21,6 +22,9 @@ import {
   I18nModule,
   QueryResolver,
 } from 'nestjs-i18n';
+import { RedisModule } from './redis/redis.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -47,19 +51,8 @@ import {
       useFactory: (config: ConfigService) => config.get('database'),
       inject: [ConfigService],
     }),
-    // I18nModule.forRootAsync({
-    //   imports: [ConfigModule],
-    //   useFactory: (config: ConfigService) => ({
-    //     fallbackLanguage: 'en',
-    //   }),
-    //   inject: [ConfigService],
-    //   global: true,
-    //   fallbackLanguage: 'en',
-    //   loaderOptions: {
-    //     path: 'src/resources/i18n/',
-    //     watch: true,
-    //   },
-    // }),
+    EventEmitterModule.forRoot(),
+    RedisModule,
     // ===== app =====
     ProductsModule,
     FoodModule,
@@ -74,6 +67,11 @@ import {
     NotificationModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
+    },
+  ],
 })
 export class AppModule {}
