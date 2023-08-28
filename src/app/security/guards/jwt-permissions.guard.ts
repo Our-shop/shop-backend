@@ -10,17 +10,22 @@ import {
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 // import { I18nService } from "nestjs-i18n";
+import { GqlExecutionContext } from '@nestjs/graphql';
 import { difference, isEmpty, includes } from "lodash";
 
 import { UserPermissions } from "src/app/user-roles/enums/user-permissions.enum";
 import { UserSessionDto } from "src/app/security/dtos/user-session.dto";
 import { ErrorCodes } from "src/shared/enums/error-codes.enum";
+import {RefreshTokenRepo} from '../../refresh-token/repo/refresh-token.repo';
 
 export const RestrictRequest = (...scopes: UserPermissions[]) => SetMetadata("user_permissions", scopes);
 
-export const CurrentUser = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
-  const request = ctx.switchToHttp().getRequest();
-  return request.user as UserSessionDto;
+
+export const CurrentUser = createParamDecorator((data: unknown, context: ExecutionContext) => {
+  // const request = ctx.switchToHttp().getRequest();
+  // return request.user as UserSessionDto;
+  const ctx = GqlExecutionContext.create(context);
+  return ctx.getContext().req.user;
 });
 
 @Injectable()

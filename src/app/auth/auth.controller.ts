@@ -1,4 +1,14 @@
-import {BadRequestException, Body, Controller, HttpStatus, Post, Req, UseGuards} from '@nestjs/common';
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    HttpStatus,
+    Post,
+    Req,
+    UseGuards,
+    Headers,
+    HttpCode, UnauthorizedException
+} from '@nestjs/common';
 import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {AuthService} from './auth.service';
 import {ErrorCodes} from '../../shared/enums/error-codes.enum';
@@ -10,13 +20,15 @@ import {TokensDto} from '../security/dtos/tokens.dto';
 import {CurrentUser, JwtPermissionsGuard, RestrictRequest} from '../security/guards/jwt-permissions.guard';
 import {UserPermissions} from '../user-roles/enums/user-permissions.enum';
 import {UserSessionDto} from '../security/dtos/user-session.dto';
+import {RefreshTokenRepo} from '../refresh-token/repo/refresh-token.repo';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
     constructor(
         private readonly authService: AuthService,
-        private readonly securityService: SecurityService
+        private readonly securityService: SecurityService,
+        private readonly refreshTokenRepo: RefreshTokenRepo,
     ) {}
 
     @ApiOperation({ summary: "Sign up with userName, email, password and roleId" })
@@ -57,17 +69,33 @@ export class AuthController {
         );
     }
 
+    // @Post("sign-out")
+    // // @UseGuards(JwtPermissionsGuard)
+    // // @RestrictRequest(UserPermissions.SignOut)
+    // async signOut(@CurrentUser() user: UserSessionDto) {
+    //     console.log(user);
+    //     return null;
+    // }
+
     @ApiOperation({ summary: "Sign out" })
     @ApiResponse({
         status: HttpStatus.OK,
         description: "HttpStatus:200:OK",
         type: null
     })
-    @Post("sign-out")
-    @UseGuards(JwtPermissionsGuard)
-    @RestrictRequest(UserPermissions.SignOut)
-    async signOut(@CurrentUser() user: UserSessionDto) {
-        return null;
+    @Post('sign-out')
+    async signOut(@Headers('Authorization') token: string) {
+        if (!token) {
+            throw new UnauthorizedException('Refresh token is missing');
+        }
+        const entity = await this.refreshTokenRepo.getTokenData(token);
+        //console.log('entity' + entity);
+        if (!entity) {
+            throw new UnauthorizedException('Token invalid');
+        }
+        const tokenEntity = await this.refreshTokenRepo.deleteRefreshToken(token);
+        //console.log(tokenEntity);
+        return { message: 'Signed out successfully' };
     }
 
     // @Post('test')
