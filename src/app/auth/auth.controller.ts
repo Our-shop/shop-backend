@@ -7,7 +7,7 @@ import {
     Req,
     UseGuards,
     Headers,
-    HttpCode, UnauthorizedException
+    HttpCode, UnauthorizedException, ValidationPipe, NotFoundException
 } from '@nestjs/common';
 import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {AuthService} from './auth.service';
@@ -21,6 +21,8 @@ import {CurrentUser, JwtPermissionsGuard, RestrictRequest} from '../security/gua
 import {UserPermissions} from '../user-roles/enums/user-permissions.enum';
 import {UserSessionDto} from '../security/dtos/user-session.dto';
 import {RefreshTokenRepo} from '../refresh-token/repo/refresh-token.repo';
+import {ResetPasswordDto} from './dtos/reset-password.dto';
+import {UserRepo} from '../users/repos/user.repo';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -29,11 +31,12 @@ export class AuthController {
         private readonly authService: AuthService,
         private readonly securityService: SecurityService,
         private readonly refreshTokenRepo: RefreshTokenRepo,
+        private readonly userRepo: UserRepo,
     ) {}
 
     @ApiOperation({ summary: "Sign up with userName, email, password and roleId" })
     @Post('sign-up')
-    async signUp(@Body() body: UserSignUpForm): Promise<Tokens> {
+    async signUp(@Body(ValidationPipe) body: UserSignUpForm): Promise<Tokens> {
         const dto = UserSignUpForm.from(body);
         const errors = await UserSignUpForm.validate(dto);
         if (errors) {
@@ -47,7 +50,7 @@ export class AuthController {
 
     @ApiOperation({ summary: "Sign in with email and password" })
     @Post('sign-in')
-    async signIn(@Body() body: UserSignInForm){
+    async signIn(@Body(ValidationPipe) body: UserSignInForm){
         const dto = UserSignInForm.from(body);
         const errors = await UserSignInForm.validate(dto);
         if (errors) {
@@ -96,6 +99,24 @@ export class AuthController {
         const tokenEntity = await this.refreshTokenRepo.deleteRefreshToken(token);
         //console.log(tokenEntity);
         return { message: 'Signed out successfully' };
+    }
+
+    @ApiOperation({ summary: "Reset password" })
+    @Post('reset-password')
+    async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+        const { email, newPassword } = resetPasswordDto;
+
+        const user = await this.userRepo.getUserByEmail(email);
+
+        if (!user) {
+            throw new NotFoundException({
+                message: ErrorCodes.NotExists_User
+            });
+        }
+
+        await this.authService.resetPassword(user, newPassword);
+
+        return { message: 'Password reset successfully' };
     }
 
     // @Post('test')
