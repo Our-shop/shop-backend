@@ -8,6 +8,8 @@ import {SecurityService} from '../security/security.service';
 import {UserSignUpForm} from './dtos/user-sign-up.form';
 import {Tokens} from './types/tokens.type';
 import {NewUserEvent} from '../../events/new.user.event';
+import {UserEntity} from '../users/entities/user.entity';
+import {BasicStatuses} from '../../shared/enums/basic-statuses.enum';
 
 
 @Injectable()
@@ -44,6 +46,11 @@ export class AuthService {
             new NewUserEvent(entity.userName)
         )
         return await this.securityService.getTokens(entity);
+    }
+
+    async resetPassword(user: UserEntity, newPassword: string): Promise<void> {
+        const updatedPassword = await this.securityService.hashData(newPassword);
+        await this.userRepo.updateUser(user.id, {password: updatedPassword});
     }
 
 }
