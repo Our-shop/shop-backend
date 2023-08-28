@@ -12,7 +12,7 @@ export class RefreshTokenRepo extends EntityRepository<RefreshTokenEntity> {
 
   async addRefreshToken(entity: UserEntity, token: string) {
     const newToken = this.create({
-      refresh_token: `Bearer ${token}`,
+      refresh_token: token,
       user: entity,
     });
     await this.entityManager.nativeDelete(RefreshTokenEntity,{user: entity});
@@ -21,7 +21,7 @@ export class RefreshTokenRepo extends EntityRepository<RefreshTokenEntity> {
   }
 
   async getTokenData(token: string) {
-    return await this.entityManager.findOne(RefreshTokenEntity,{ refresh_token: token });
+    return await this.entityManager.findOne(RefreshTokenEntity,{ refresh_token: token.substring(7) });
   }
 
   async deleteRefreshToken(token) {

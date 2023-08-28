@@ -1,6 +1,4 @@
-import { Injectable, UseInterceptors } from '@nestjs/common';
-import { CacheInterceptor } from '@nestjs/cache-manager';
-
+import { Injectable } from '@nestjs/common';
 import { RedisService } from '../../redis/redis.service';
 
 import { UserRepo } from './repos/user.repo';
@@ -9,7 +7,6 @@ import { OrdersRepo } from '../orders/repos/orders.repo';
 import { OrderItemsRepo } from '../order-items/repos/order-item.repo';
 import { UserSignUpForm } from '../auth/dtos/user-sign-up.form';
 import {UserDto} from './dtos/user.dto';
-
 
 @Injectable()
 export class UsersService {
@@ -21,14 +18,7 @@ export class UsersService {
   ) {}
 
   async getAllUsers(): Promise<UserDto[]> {
-    // const cachedValue = await this.redisService.get('all-users');
-    // if (cachedValue) {
-    //   console.log('CASHED');
-    //   console.log(cachedValue);
-    //   return cachedValue;
-    // }
     return await this.userRepo.getList();
-    // await this.redisService.set('all-users', users);
   }
 
   async getUserById(id: string): Promise<UserDto | string> {
