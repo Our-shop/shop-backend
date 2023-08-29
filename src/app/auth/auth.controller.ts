@@ -7,9 +7,10 @@ import {
     Req,
     UseGuards,
     Headers,
-    HttpCode, UnauthorizedException, ValidationPipe, NotFoundException
+    HttpCode, UnauthorizedException, ValidationPipe, NotFoundException, Param
 } from '@nestjs/common';
 import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
+import { JwtService } from '@nestjs/jwt';
 import {AuthService} from './auth.service';
 import {ErrorCodes} from '../../shared/enums/error-codes.enum';
 import {UserSignInForm} from './dtos/user-sign-in.form';
@@ -23,6 +24,7 @@ import {UserSessionDto} from '../security/dtos/user-session.dto';
 import {RefreshTokenRepo} from '../refresh-token/repo/refresh-token.repo';
 import {ResetPasswordDto} from './dtos/reset-password.dto';
 import {UserRepo} from '../users/repos/user.repo';
+import {ForgotPasswordDto} from './dtos/forgot-password.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -32,6 +34,7 @@ export class AuthController {
         private readonly securityService: SecurityService,
         private readonly refreshTokenRepo: RefreshTokenRepo,
         private readonly userRepo: UserRepo,
+        private readonly jwtService: JwtService,
     ) {}
 
     @ApiOperation({ summary: "Sign up with userName, email, password and roleId" })
@@ -92,32 +95,44 @@ export class AuthController {
             throw new UnauthorizedException('Refresh token is missing');
         }
         const entity = await this.refreshTokenRepo.getTokenData(token);
-        //console.log('entity' + entity);
         if (!entity) {
             throw new UnauthorizedException('Token invalid');
         }
         const tokenEntity = await this.refreshTokenRepo.deleteRefreshToken(token);
-        //console.log(tokenEntity);
+        console.log(tokenEntity);
         return { message: 'Signed out successfully' };
     }
 
+
+    @ApiOperation({ summary: "Forgot password" })
+    @Post('forgot-password')
+    async forgotPassword(@Body(new ValidationPipe()) resetDto: ForgotPasswordDto) {
+        return await this.securityService.generateRandomToken(resetDto.email);
+    }
+
     @ApiOperation({ summary: "Reset password" })
-    @Post('reset-password')
-    async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
-        const { email, newPassword } = resetPasswordDto;
+    @Post('reset-password/:token')
+    async resetPassword(@Param('token') token: string, @Body() resetPasswordDto: ResetPasswordDto) {
 
-        const user = await this.userRepo.getUserByEmail(email);
+        // comparison of email part in token and resetPassword dto:
+        const emailPart = token.slice(10);
+        const emailDtoPart = resetPasswordDto.email.match(/^(.*?)@/);
 
-        if (!user) {
-            throw new NotFoundException({
-                message: ErrorCodes.NotExists_User
-            });
+        if (emailDtoPart[1] !== emailPart) {
+            throw new UnauthorizedException('Invalid or expired token');
         }
 
-        await this.authService.resetPassword(user, newPassword);
+        const user = await this.userRepo.getUserByEmail(resetPasswordDto.email);
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
 
-        return { message: 'Password reset successfully' };
+        const newPassword = resetPasswordDto.newPassword;
+        console.log(newPassword);
+        const hashedPassword = await this.securityService.hashData(newPassword);
+        await this.authService.resetPassword(user, hashedPassword);
     }
+
 
     // @Post('test')
     // @UseGuards(JwtPermissionsGuard)
