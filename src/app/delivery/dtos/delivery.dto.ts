@@ -1,26 +1,33 @@
-import {BasicDto} from '../../../shared/dto/basic.dto';
-import {ApiProperty} from '@nestjs/swagger';
-import {DeliveryEntity} from '../entities/delivery.entity';
+import { BasicDto } from '../../../shared/dto/basic.dto';
+import { ApiProperty } from '@nestjs/swagger';
+import { DeliveryEntity } from '../entities/delivery.entity';
+import { IsString } from '@nestjs/class-validator';
+import { ErrorCodes } from '../../../shared/enums/error-codes.enum';
+import { IsMobilePhone, IsUUID } from 'class-validator';
 
 export class DeliveryDto extends BasicDto {
     @ApiProperty({
         description: 'user_id',
     })
+    @IsUUID()
     userId!: string;
 
     @ApiProperty({
         description: 'city',
     })
+    @IsString({ message: ErrorCodes.FieldShouldBeString })
     city!: string;
 
     @ApiProperty({
         description: 'address',
     })
+    @IsString({ message: ErrorCodes.FieldShouldBeString })
     address!: string;
 
     @ApiProperty({
         description: 'phone',
     })
+    @IsString({ message: ErrorCodes.FieldShouldBeString })
     phone!: string;
 
     static fromEntity(entity?: DeliveryEntity) {
