@@ -12,7 +12,10 @@ export class UserRolesController {
     @ApiOperation({ summary: 'Get all user roles' })
     @Get()
     async getAllUserRoles(): Promise<UserRoleDto[]> {
-        return await this.userRolesService.getAllUserRoles();
+        const entities = await this.userRolesService.getAllUserRoles();
+
+        const userRoles = UserRoleDto.fromEntities(entities);
+        return userRoles || [];
     }
 
     @ApiOperation({ summary: 'Get user role by id' })

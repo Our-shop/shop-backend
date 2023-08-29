@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import {JwtModule, JwtService} from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
+
 import { UserEntity } from 'src/app/users/entities/user.entity';
 import { UserRepo } from 'src/app/users/repos/user.repo';
 import { JwtStrategyService } from 'src/app/security/jwt-strategy.service';
