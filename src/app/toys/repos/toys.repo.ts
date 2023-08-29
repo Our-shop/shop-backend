@@ -25,7 +25,7 @@ export class ToysRepo extends EntityRepository<ToyEntity> {
       description: dto.description,
       image: dto.image,
       quantity: dto.quantity,
-      category: ProductCategories.Food,
+      category: ProductCategories.Toys,
       type: dto.type,
       recommendedAge: dto.recommendedAge,
     });
