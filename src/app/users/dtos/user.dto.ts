@@ -1,26 +1,44 @@
 import { BasicDto } from '../../../shared/dto/basic.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsString, IsUUID, Matches, MaxLength, MinLength, IsEmail } from 'class-validator';
+import { ErrorCodes } from '../../../shared/enums/error-codes.enum';
 import { UserEntity } from '../entities/user.entity';
 
 export class UserDto extends BasicDto {
   @ApiProperty({
     description: 'User name',
   })
+  @IsString({ message: ErrorCodes.FieldShouldBeString })
   userName!: string;
 
   @ApiProperty({
     description: 'User password',
   })
+  @IsString({ message: ErrorCodes.FieldShouldBeString })
+  @MinLength(6)
+  @MaxLength(20)
+  @Matches(
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9!@#$%^&*()_+])[A-Za-z0-9!@#$%^&*()_+]+$/,
+      {
+        message:
+            'Password should contain at least 6 characters including:' +
+            '* 1 Uppercase letter, ' +
+            '* 1 Lowercase letter,  ' +
+            '* 1 number or special character',
+      },
+  )
   password!: string;
 
   @ApiProperty({
     description: 'User email',
   })
+  @IsEmail(undefined, { message: ErrorCodes.FieldShouldBeEmail })
   email!: string;
 
   @ApiProperty({
     description: 'User role id',
   })
+  @IsUUID()
   roleId!: string;
 
   // @ApiProperty({

@@ -4,7 +4,6 @@ import {UserRoles} from '../enums/user-roles.enum';
 import {IsArray, IsEnum, ValidateNested} from 'class-validator';
 import {UserPermissions} from '../enums/user-permissions.enum';
 import {UserRoleEntity} from '../entities/user-role.entity';
-import {UserDto} from '../../users/dtos/user.dto';
 
 export class UserRoleDto extends BasicDto {
     @ApiProperty({

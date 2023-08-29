@@ -1,7 +1,6 @@
 import { IsEmail, IsString, validate } from '@nestjs/class-validator';
-
+import { IsUUID, Matches, MaxLength, MinLength } from 'class-validator';
 import { ErrorCodes } from 'src/shared/enums/error-codes.enum';
-import {Matches, MaxLength, MinLength} from 'class-validator';
 
 export class UserSignUpForm {
   @IsString({ message: ErrorCodes.FieldShouldBeString })
@@ -25,7 +24,7 @@ export class UserSignUpForm {
   )
   password!: string;
 
-  @IsString({ message: ErrorCodes.FieldShouldBeString })
+  @IsUUID()
   roleId!: string;
 
   static from(form: UserSignUpForm) {

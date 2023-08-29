@@ -1,5 +1,5 @@
-import {IsEmail, IsNotEmpty, IsString, Matches, MaxLength, MinLength} from 'class-validator';
-import {ErrorCodes} from '../../../shared/enums/error-codes.enum';
+import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { ErrorCodes } from '../../../shared/enums/error-codes.enum';
 
 export class ResetPasswordDto {
     @IsEmail(undefined, { message: ErrorCodes.FieldShouldBeEmail })

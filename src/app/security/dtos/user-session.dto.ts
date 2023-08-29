@@ -1,19 +1,16 @@
-import { IsArray, IsNumber, IsString, IsUUID } from '@nestjs/class-validator';
-import { UserPermissions } from 'src/app/user-roles/enums/user-permissions.enum';
-
+import { IsArray, IsNumber, IsUUID } from '@nestjs/class-validator';
+import { IsEmail } from 'class-validator';
 // ============ enums ===============
-
+import { UserPermissions } from 'src/app/user-roles/enums/user-permissions.enum';
 // ============ entities =============
 import { UserEntity } from 'src/app/users/entities/user.entity';
-import { UserRoles } from '../../user-roles/enums/user-roles.enum';
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum } from 'class-validator';
+
 
 export class UserSessionDto {
   @IsUUID()
   id: string;
 
-  @IsString()
+  @IsEmail()
   email: string;
 
   // @ApiProperty({
