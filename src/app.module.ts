@@ -20,7 +20,6 @@ import { RedisModule } from './redis/redis.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -46,7 +45,7 @@ import { CacheInterceptor } from '@nestjs/cache-manager';
     OrderItemsModule,
     DeliveryModule,
     AuthModule,
-    NotificationModule
+    NotificationModule,
   ],
   controllers: [],
   providers: [

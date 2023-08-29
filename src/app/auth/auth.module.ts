@@ -8,6 +8,7 @@ import {SecurityModule} from '../security/security.module';
 import {UserRoleEntity} from '../user-roles/entities/user-role.entity';
 import {RefreshTokenRepo} from '../refresh-token/repo/refresh-token.repo';
 import {RefreshTokenEntity} from '../refresh-token/entity/refresh-token.entity';
+import { OrdersRepo } from '../orders/repos/orders.repo';
 
 @Module({
     imports: [
@@ -16,7 +17,7 @@ import {RefreshTokenEntity} from '../refresh-token/entity/refresh-token.entity';
         }),
         SecurityModule
     ],
-    providers: [AuthService, UserRepo, RefreshTokenRepo],
+    providers: [AuthService, UserRepo, RefreshTokenRepo, OrdersRepo],
     controllers: [AuthController],
 })
 export class AuthModule {}
