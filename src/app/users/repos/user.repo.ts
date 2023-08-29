@@ -1,10 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
 import { UserEntity } from '../entities/user.entity';
-import { UserDto } from '../dtos/user.dto';
 import { BasicStatuses } from '../../../shared/enums/basic-statuses.enum';
 import { UserSignUpForm } from '../../auth/dtos/user-sign-up.form';
 import { UserRoleRepo } from '../../user-roles/repos/user-role.repo';
+import { UserPermissions } from '../../user-roles/enums/user-permissions.enum';
 
 @Injectable()
 export class UserRepo extends EntityRepository<UserEntity> {
@@ -15,19 +15,12 @@ export class UserRepo extends EntityRepository<UserEntity> {
     super(entityManager, UserEntity);
   }
 
-  async getList(): Promise<UserDto[]> {
-    const entities = await this.findAll();
-    const users = UserDto.fromEntities(entities);
-    return users || [];
+  async getList(): Promise<UserEntity[]> {
+    return await this.findAll();
   }
 
-  async getUser(id: string): Promise<UserDto | string> {
-    const found = await this.findOne({ id });
-    if (!found) {
-      throw new NotFoundException(`User with id: ${id} not found`);
-    }
-    const user = UserDto.fromEntity(found);
-    return user || null;
+  async getUser(id: string): Promise<UserEntity> {
+    return await this.findOne({ id });
   }
 
   async getUserByEmail(email: string) {
@@ -38,7 +31,7 @@ export class UserRepo extends EntityRepository<UserEntity> {
     return await this.entityManager.findOne(UserEntity,{ email, password });
   }
 
-  async getUserPermissions(id: string) {
+  async getUserPermissions(id: string): Promise<UserPermissions[]> {
     const user = await this.findOne({ id });
     const roleId = user.roleId;
     const userRole = await this.userRolesRepo.getUserRole(roleId);

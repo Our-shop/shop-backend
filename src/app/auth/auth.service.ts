@@ -27,7 +27,7 @@ export class AuthService {
         if (!userEntity) {
             throw new BadRequestException({ message: ErrorCodes.NotExists_User });
         }
-        const passwordCorrect = await this.securityService.checkPassword(
+        const passwordCorrect = await this.securityService.checkData(
             form.password,
             userEntity.password,
         );

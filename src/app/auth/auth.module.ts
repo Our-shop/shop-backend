@@ -9,6 +9,7 @@ import {UserRoleEntity} from '../user-roles/entities/user-role.entity';
 import {RefreshTokenRepo} from '../refresh-token/repo/refresh-token.repo';
 import {RefreshTokenEntity} from '../refresh-token/entity/refresh-token.entity';
 import { OrdersRepo } from '../orders/repos/orders.repo';
+import {JwtService} from '@nestjs/jwt';
 
 @Module({
     imports: [
@@ -17,7 +18,7 @@ import { OrdersRepo } from '../orders/repos/orders.repo';
         }),
         SecurityModule
     ],
-    providers: [AuthService, UserRepo, RefreshTokenRepo, OrdersRepo],
+    providers: [AuthService, UserRepo, RefreshTokenRepo, OrdersRepo, JwtService],
     controllers: [AuthController],
 })
 export class AuthModule {}

@@ -1,21 +1,23 @@
-import {Injectable, NotAcceptableException} from '@nestjs/common';
+import {Injectable, NotAcceptableException, NotFoundException} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
+import { randomBytes } from 'crypto';
 
 import { UserRepo } from 'src/app/users/repos/user.repo';
 import { UserEntity } from 'src/app/users/entities/user.entity';
 import { UserSessionDto } from 'src/app/security/dtos/user-session.dto';
 import { Tokens } from '../auth/types/tokens.type';
 import { RefreshTokenRepo } from '../refresh-token/repo/refresh-token.repo';
-import {ErrorCodes} from '../../shared/enums/error-codes.enum';
+import { ErrorCodes } from '../../shared/enums/error-codes.enum';
+
 
 @Injectable()
 export class SecurityService {
   constructor(
-    private readonly userRepo: UserRepo,
     private readonly jwtService: JwtService,
     private config: ConfigService,
+    private readonly userRepo: UserRepo,
     private readonly refreshTokenRepo: RefreshTokenRepo,
   ) {}
 
@@ -95,8 +97,22 @@ export class SecurityService {
     return await bcrypt.hash(data, 10);
   }
 
-  async checkPassword(password, hashedPassword) {
-    return bcrypt.compare(password, hashedPassword);
+  async checkData(param, hashedParam) {
+    return bcrypt.compare(param, hashedParam);
+  }
+
+  async generateRandomToken(email: string) {
+      const user = await this.userRepo.getUserByEmail(email);
+
+      if (!user) {
+          throw new NotFoundException({
+              message: ErrorCodes.NotExists_User
+          });
+      }
+
+      const str = randomBytes(5).toString('hex');   // 10 random bytes
+      const emailPart = email.match(/^(.*?)@/);          // email before @
+      return `${str}${emailPart[1]}`                            // 10 random bytes + email before @
   }
 
 
