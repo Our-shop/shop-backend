@@ -2,21 +2,22 @@ import {Injectable, NotAcceptableException, NotFoundException} from '@nestjs/com
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
+import { randomBytes } from 'crypto';
 
 import { UserRepo } from 'src/app/users/repos/user.repo';
 import { UserEntity } from 'src/app/users/entities/user.entity';
 import { UserSessionDto } from 'src/app/security/dtos/user-session.dto';
 import { Tokens } from '../auth/types/tokens.type';
 import { RefreshTokenRepo } from '../refresh-token/repo/refresh-token.repo';
-import {ErrorCodes} from '../../shared/enums/error-codes.enum';
-import {randomBytes} from 'crypto';
+import { ErrorCodes } from '../../shared/enums/error-codes.enum';
+
 
 @Injectable()
 export class SecurityService {
   constructor(
-    private readonly userRepo: UserRepo,
     private readonly jwtService: JwtService,
     private config: ConfigService,
+    private readonly userRepo: UserRepo,
     private readonly refreshTokenRepo: RefreshTokenRepo,
   ) {}
 

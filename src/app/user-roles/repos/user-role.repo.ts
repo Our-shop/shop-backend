@@ -12,13 +12,11 @@ export class UserRoleRepo extends EntityRepository<UserRoleEntity> {
         super(entityManager, UserRoleEntity);
     }
 
-    async getList() {
-        const entities = await this.findAll();
-        const userRoles = UserRoleDto.fromEntities(entities);
-        return userRoles || [];
+    async getList(): Promise<UserRoleEntity[]> {
+        return await this.findAll();
     }
 
-    async getUserRole(id: string) {
+    async getUserRole(id: string): Promise<UserRoleEntity> {
         return await this.entityManager.findOne(UserRoleEntity,{id: id});
     }
 

@@ -7,7 +7,7 @@ import {UserRoleEntity} from './entities/user-role.entity';
 export class UserRolesService {
     constructor(private readonly userRoleRepo: UserRoleRepo) {}
 
-    async getAllUserRoles(): Promise<UserRoleDto[]> {
+    async getAllUserRoles(): Promise<UserRoleEntity[]> {
         return await this.userRoleRepo.getList();
     }
 
