@@ -4,6 +4,7 @@ import { OrderEntity } from '../entities/order.entity';
 import { BasicStatuses } from '../../../shared/enums/basic-statuses.enum';
 import { OrderStatuses } from '../enums/order-statuses.enum';
 import { OrderDto } from '../dtos/order.dto';
+import { populate } from 'dotenv';
 
 @Injectable()
 export class OrdersRepo extends EntityRepository<OrderEntity> {
@@ -58,7 +59,13 @@ export class OrdersRepo extends EntityRepository<OrderEntity> {
   }
 
   public async getCartByUserId(userId: string): Promise<OrderEntity> {
-    return await this.findOne({ userId, orderStatus: OrderStatuses.InCart });
+    return await this.findOne(
+      {
+        userId,
+        orderStatus: OrderStatuses.InCart,
+      },
+      { populate: ['orderItems'] },
+    );
   }
 
   public async addNewCart(userId: string): Promise<OrderEntity> {

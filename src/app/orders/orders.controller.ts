@@ -17,8 +17,10 @@ import { JwtService } from '@nestjs/jwt';
 @ApiTags('orders')
 @Controller()
 export class OrdersController {
-  constructor(private readonly ordersService: OrdersService,
-              private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly ordersService: OrdersService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   // ORDERS
   @ApiOperation({ summary: 'Get all orders' })
