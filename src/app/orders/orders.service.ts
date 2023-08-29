@@ -4,6 +4,8 @@ import { OrderEntity } from './entities/order.entity';
 import { OrderItemsRepo } from '../order-items/repos/order-item.repo';
 import { ProductsRepo } from '../../shared/repos/products.repo';
 import { OrderDto } from './dtos/order.dto';
+import { RefreshTokenRepo } from '../refresh-token/repo/refresh-token.repo';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class OrdersService {
@@ -11,6 +13,8 @@ export class OrdersService {
     private readonly ordersRepo: OrdersRepo,
     private readonly orderItemsRepo: OrderItemsRepo,
     private readonly productsRepo: ProductsRepo,
+    private readonly tokensRepo: RefreshTokenRepo,
+    private readonly jwtService: JwtService,
   ) {}
 
   // ORDERS
@@ -65,6 +69,12 @@ export class OrdersService {
 
   public async getCartByUserId(userId: string): Promise<OrderEntity> {
     return await this.ordersRepo.getCartByUserId(userId);
+  }
+
+  public async getActiveCart(token: string): Promise<OrderEntity> {
+    const tokenData: any = await this.jwtService.decode(token);
+
+    return await this.ordersRepo.getCartByUserId(tokenData.id);
   }
 
   public async editCartDiscount(

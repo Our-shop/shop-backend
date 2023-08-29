@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   Param,
   Post,
   Put,
@@ -11,11 +12,15 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { OrdersService } from './orders.service';
 import { OrderDto } from './dtos/order.dto';
 import { OrderEntity } from './entities/order.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @ApiTags('orders')
 @Controller()
 export class OrdersController {
-  constructor(private readonly ordersService: OrdersService) {}
+  constructor(
+    private readonly ordersService: OrdersService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   // ORDERS
   @ApiOperation({ summary: 'Get all orders' })
@@ -81,6 +86,14 @@ export class OrdersController {
   @Get('carts/user/:userId')
   public async getCartByUserId(@Param('userId') id: string) {
     const entity = await this.ordersService.getCartByUserId(id);
+
+    return OrderDto.fromEntity(entity) || null;
+  }
+
+  @ApiOperation({ summary: 'Get active cart by token' })
+  @Get('active-cart')
+  public async getActiveCart(@Headers('Authorization') token: string) {
+    const entity = await this.ordersService.getActiveCart(token.split(' ')[1]);
 
     return OrderDto.fromEntity(entity) || null;
   }

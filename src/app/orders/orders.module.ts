@@ -8,6 +8,8 @@ import { OrderItemsRepo } from '../order-items/repos/order-item.repo';
 import { ProductEntity } from '../../shared/entities/product.entity';
 import { ProductsRepo } from '../../shared/repos/products.repo';
 import { OrdersRepo } from './repos/orders.repo';
+import { RefreshTokenRepo } from '../refresh-token/repo/refresh-token.repo';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -15,7 +17,14 @@ import { OrdersRepo } from './repos/orders.repo';
       entities: [OrderEntity, OrderItemEntity, ProductEntity],
     }),
   ],
-  providers: [OrdersService, OrdersRepo, OrderItemsRepo, ProductsRepo],
+  providers: [
+    OrdersService,
+    OrdersRepo,
+    OrderItemsRepo,
+    ProductsRepo,
+    RefreshTokenRepo,
+    JwtService,
+  ],
   controllers: [OrdersController],
   exports: [OrdersRepo],
 })

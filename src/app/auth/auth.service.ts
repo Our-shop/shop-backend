@@ -10,6 +10,7 @@ import {Tokens} from './types/tokens.type';
 import {NewUserEvent} from '../../events/new.user.event';
 import {UserEntity} from '../users/entities/user.entity';
 import {BasicStatuses} from '../../shared/enums/basic-statuses.enum';
+import { OrdersRepo } from '../orders/repos/orders.repo';
 
 
 @Injectable()
@@ -17,7 +18,8 @@ export class AuthService {
     constructor(
         private readonly userRepo: UserRepo,
         private readonly securityService: SecurityService,
-        private eventEmitter: EventEmitter2
+        private eventEmitter: EventEmitter2,
+        private ordersRepo: OrdersRepo,
     ) {}
 
     async signIn(form: UserSignInForm): Promise<Tokens> {
@@ -42,6 +44,7 @@ export class AuthService {
         }
         form.password = await this.securityService.hashData(form.password);
         const entity = await this.userRepo.addNewUser(form);
+        await this.ordersRepo.addNewCart(entity.id);
         this.eventEmitter.emit('new.user',
             new NewUserEvent(entity.userName)
         )
