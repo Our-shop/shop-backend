@@ -1,8 +1,7 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {UserRoleRepo} from './repos/user-role.repo';
 import {UserRoleDto} from './dtos/user-role.dto';
 import {UserRoleEntity} from './entities/user-role.entity';
-import {UserRoleUpdateDto} from './dtos/user-role.update.dto';
 
 @Injectable()
 export class UserRolesService {
@@ -20,11 +19,11 @@ export class UserRolesService {
         return this.userRoleRepo.addUserRole(newUserRole);
     }
 
-    async updateUserRole(id: string, updatedUserRoleDto: UserRoleUpdateDto) {
+    async updateUserRole(id: string, updatedUserRoleDto: Partial<UserRoleDto>) {
         return this.userRoleRepo.updateUserRole(id, updatedUserRoleDto);
     }
 
-    async deleteUserRole(id: string): Promise<UserRoleEntity | string> {
+    async deleteUserRole(id: string): Promise<UserRoleEntity> {
         return this.userRoleRepo.deleteUserRole(id);
     }
 }

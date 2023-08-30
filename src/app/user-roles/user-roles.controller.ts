@@ -2,8 +2,6 @@ import {Body, Controller, Delete, Get, NotFoundException, Param, Post, Put} from
 import {ApiOperation, ApiTags} from '@nestjs/swagger';
 import {UserRolesService} from './user-roles.service';
 import {UserRoleDto} from './dtos/user-role.dto';
-import {UserRoleEntity} from './entities/user-role.entity';
-import {UserRoleUpdateDto} from './dtos/user-role.update.dto';
 
 @ApiTags('user-roles')
 @Controller('user-roles')
@@ -24,7 +22,7 @@ export class UserRolesController {
     async getUserRoleById(@Param('userRoleId') id: string): Promise<UserRoleDto | string> {
         const found = await this.userRolesService.getUserRoleById(id);
         if (!found) {
-            throw new NotFoundException(`User role with id: ${id} not found`);
+            throw new NotFoundException(`User role not found`);
         }
         return UserRoleDto.fromEntity(found);
     }
@@ -41,15 +39,19 @@ export class UserRolesController {
     @Put('/:userRoleId')
     async updateUserRole(
         @Param('userRoleId') id: string,
-        @Body() updatedUserRoleDto: UserRoleUpdateDto,
+        @Body() updatedUserRoleDto: Partial<UserRoleDto>,
     ) {
         return this.userRolesService.updateUserRole(id, updatedUserRoleDto);
     }
 
     @ApiOperation({ summary: 'Archive user role by id' })
     @Delete('/:userRoleId')
-    async deleteUserRole(@Param('userRoleId') id: string): Promise<UserRoleEntity | string> {
-        return this.userRolesService.deleteUserRole(id);
+    async deleteUserRole(@Param('userRoleId') id: string): Promise<UserRoleDto> {
+        const found = await this.userRolesService.deleteUserRole(id);
+        if (!found) {
+            throw new NotFoundException(`User role not found`);
+        }
+        return UserRoleDto.fromEntity(found);
     }
 
 }

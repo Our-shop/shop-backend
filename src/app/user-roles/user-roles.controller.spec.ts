@@ -3,27 +3,30 @@ import {UserRolesController} from './user-roles.controller';
 import {UserRolesService} from './user-roles.service';
 import {UserRoles} from './enums/user-roles.enum';
 import {UserRoleDto} from './dtos/user-role.dto';
-import {BasicDto} from '../../shared/dto/basic.dto';
 import {UserPermissions} from './enums/user-permissions.enum';
-import {UUIDDto} from '../../shared/dto/uui.dto';
 import {BasicStatuses} from '../../shared/enums/basic-statuses.enum';
 import {UserRoleEntity} from './entities/user-role.entity';
-import {UserRoleUpdateDto} from './dtos/user-role.update.dto';
-import {UserDto} from '../users/dtos/user.dto';
 import {NotFoundException} from '@nestjs/common';
-import {BasicEntity} from '../../shared/entities/basic.entity';
+
 
 describe('UserRolesController', () => {
     let controller: UserRolesController;
     let service: UserRolesService;
     const userRoleEntities: UserRoleEntity[] = [];
 
+    const userRoleMockedDto: UserRoleDto = {
+        id: "90366a15-0176-4581-a124-357d479fe824",
+        created: 1693305565000,
+        updated: 1693305565000,
+        type: UserRoles.Admin,
+        status: BasicStatuses.Active,
+        permissions: [UserPermissions.All],
+    };
+
     const mockUserRolesService = {
         addUserRole: jest.fn(dto => {
             return {
                 id: expect.any(String),
-                // created: expect.any(Date),
-                // updated: expect.any(Date),
                 created: expect.any(Date),
                 updated: expect.any(Date),
                 status: BasicStatuses.Active,
@@ -38,11 +41,22 @@ describe('UserRolesController', () => {
                 ...dto
             }
         }),
-        getUserRoleById: jest.fn((userId) => {
-            return {
-                userId,
-                ...UserRoleDto
+        getUserRoleById: jest.fn((id) => {
+            if (!id) {
+                throw new NotFoundException(`User role not found`);
             }
+            return {
+                id: id,
+                ...userRoleMockedDto,
+            }
+        }),
+        deleteUserRole: jest.fn((id) => {
+            const found = mockUserRolesService.getUserRoleById(id);
+            if (!found) {
+                throw new NotFoundException(`User role not found`);
+            }
+            found.status = BasicStatuses.Archived;
+            return found;
         })
     }
 
@@ -70,6 +84,34 @@ describe('UserRolesController', () => {
         status: BasicStatuses.Active,
     }
 
+    describe('GET/user-roles', () => {
+        it('should return array of user roles', async () => {
+          const result = await controller.getAllUserRoles();
+          expect(result).toBeInstanceOf(Array);
+        });
+    });
+
+    describe('GET/user-roles/:userRoleId', () => {
+        it('should return user role dto by role id', async () => {
+            const res = await controller.addUserRole(userRoleMockedDto);
+            let result = await controller.getUserRoleById(res.id);
+
+            expect(result).toEqual(userRoleMockedDto);
+            expect(mockUserRolesService.getUserRoleById).toHaveBeenCalledWith(userRoleMockedDto.id);
+        });
+
+        it('should return NotFoundException if user role not found', async () => {
+
+            try {
+                await controller.getUserRoleById(null);
+            } catch (error) {
+                expect(error).toBeInstanceOf(NotFoundException);
+            }
+
+            expect(mockUserRolesService.getUserRoleById).toHaveBeenCalledWith(null);
+        });
+    });
+
     describe('POST/user-roles', () => {
         it('should create user role', async () => {
 
@@ -89,55 +131,12 @@ describe('UserRolesController', () => {
                 status: 'active',
                 type: 'admin',
                 permissions: ['permissions.all']
-
             };
 
             const result = await controller.addUserRole(userRoleDto);
             expect(result).toEqual(expectedResponse);
 
             expect(mockUserRolesService.addUserRole).toHaveBeenCalledWith(userRoleDto);
-        });
-    });
-
-    describe('GET/user-roles', () => {
-        it('should return array of user roles', async () => {
-          const result = await controller.getAllUserRoles();
-          expect(result).toBeInstanceOf(Array);
-        });
-    });
-
-    describe('GET/user-roles/:userRoleId', () => {
-        it('should return user role by role id', async () => {
-            const userRoleDto: UserRoleDto = {
-                id: "90366a15-0176-4581-a124-357d479fe824",
-                created: expect.any(Number),
-                updated: expect.any(Number),
-                type: UserRoles.Admin,
-                status: BasicStatuses.Active,
-                permissions: [UserPermissions.All],
-            };
-            // const userRoleDto: UserRoleDto = {
-            //     type: UserRoles.Admin,
-            //     permissions: [UserPermissions.All],
-            //     ...mockedBasicFields,
-            // };
-            // const mockUserRole: UserRoleEntity = {
-            //     id: '90366a15-0176-4581-a124-357d479fe824',
-            //     status: BasicStatuses.Active,
-            //     created: new Date(),
-            //     updated: new Date(),
-            //     type: UserRoles.Admin,
-            //     permissions: [UserPermissions.All],
-            // };
-            // const dto = UserRoleDto.fromEntity(mockUserRole);
-            // console.log(dto);
-            const res = await controller.addUserRole(userRoleDto);
-            console.log(res);
-            let result = await controller.getUserRoleById(res.id);
-            console.log(result);
-
-            expect(result).toEqual(res);
-            expect(mockUserRolesService.getUserRoleById).toHaveBeenCalledWith(userRoleDto.id);
         });
     });
 
@@ -148,7 +147,7 @@ describe('UserRolesController', () => {
                 permissions: [UserPermissions.All],
                 ...mockedBasicFields,
             };
-            const data: UserRoleUpdateDto = {
+            const data: Partial<UserRoleDto> = {
                 type: UserRoles.Admin,
             }
             const res = await controller.updateUserRole(userRoleDto.id, data);
@@ -156,11 +155,28 @@ describe('UserRolesController', () => {
 
             expect(mockUserRolesService.updateUserRole).toHaveBeenCalledWith(userRoleDto.id, data);
         });
-
-
     });
 
+    describe('DELETE/:id', () => {
+        it('should archive user role', async () => {
+            const res = await controller.addUserRole(userRoleMockedDto);
+            const deleted = await controller.deleteUserRole(res.id);
 
+            expect(deleted.status).toEqual('archived');
+            expect(mockUserRolesService.deleteUserRole).toHaveBeenCalledWith(res.id);
+        });
+
+        it('should return NotFoundException if user role not found', async () => {
+
+            try {
+                await controller.deleteUserRole(null);
+            } catch (error) {
+                expect(error).toBeInstanceOf(NotFoundException);
+            }
+
+            expect(mockUserRolesService.deleteUserRole).toHaveBeenCalledWith(null);
+        });
+    });
 
 
 });
