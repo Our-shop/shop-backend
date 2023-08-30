@@ -2,6 +2,7 @@ import {Body, Controller, Delete, Get, NotFoundException, Param, Post, Put} from
 import {ApiOperation, ApiTags} from '@nestjs/swagger';
 import {UserRolesService} from './user-roles.service';
 import {UserRoleDto} from './dtos/user-role.dto';
+import {ErrorCodes} from '../../shared/enums/error-codes.enum';
 
 @ApiTags('user-roles')
 @Controller('user-roles')
@@ -22,7 +23,7 @@ export class UserRolesController {
     async getUserRoleById(@Param('userRoleId') id: string): Promise<UserRoleDto | string> {
         const found = await this.userRolesService.getUserRoleById(id);
         if (!found) {
-            throw new NotFoundException(`User role not found`);
+            throw new NotFoundException(ErrorCodes.NotFound_User_Role);
         }
         return UserRoleDto.fromEntity(found);
     }
@@ -49,7 +50,7 @@ export class UserRolesController {
     async deleteUserRole(@Param('userRoleId') id: string): Promise<UserRoleDto> {
         const found = await this.userRolesService.deleteUserRole(id);
         if (!found) {
-            throw new NotFoundException(`User role not found`);
+            throw new NotFoundException(ErrorCodes.NotFound_User_Role);
         }
         return UserRoleDto.fromEntity(found);
     }

@@ -10,5 +10,7 @@
 
   "invalid-status.user-inactive": "Error! User is inactive",
 
-  "not-exists.user": "Error! User does not exist"
+  "not-exists.user": "Error! User does not exist",
+
+  "errors.not-found.user-role": "Error! User role not found"
 }
