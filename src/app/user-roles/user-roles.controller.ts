@@ -3,6 +3,7 @@ import {ApiOperation, ApiTags} from '@nestjs/swagger';
 import {UserRolesService} from './user-roles.service';
 import {UserRoleDto} from './dtos/user-role.dto';
 import {UserRoleEntity} from './entities/user-role.entity';
+import {UserRoleUpdateDto} from './dtos/user-role.update.dto';
 
 @ApiTags('user-roles')
 @Controller('user-roles')
@@ -30,15 +31,17 @@ export class UserRolesController {
 
     @ApiOperation({ summary: 'Create user role' })
     @Post()
-    async addUserRole(@Body() newUserRole: UserRoleDto): Promise<UserRoleEntity> {
-        return this.userRolesService.addUserRole(newUserRole);
+    async addUserRole(@Body() newUserRole: UserRoleDto): Promise<UserRoleDto> {
+        const res = await this.userRolesService.addUserRole(newUserRole);
+
+        return UserRoleDto.fromEntity(res);
     }
 
     @ApiOperation({ summary: 'Edit user role' })
     @Put('/:userRoleId')
     async updateUserRole(
         @Param('userRoleId') id: string,
-        @Body() updatedUserRoleDto: Partial<UserRoleEntity>,
+        @Body() updatedUserRoleDto: UserRoleUpdateDto,
     ) {
         return this.userRolesService.updateUserRole(id, updatedUserRoleDto);
     }
