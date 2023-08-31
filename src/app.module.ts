@@ -34,18 +34,21 @@ import { CacheInterceptor } from '@nestjs/cache-manager';
       isGlobal: true,
     }),
     EventEmitterModule.forRoot(),
-    I18nModule.forRoot({
-      fallbackLanguage: 'en',
-      loaderOptions: {
-        path: 'src/resources/i18n/',
-        watch: true,
-      },
-      resolvers: [
-        { use: QueryResolver, options: ['lang'] },
-        AcceptLanguageResolver,
-        new HeaderResolver(['x-lang']),
-      ],
-    }),
+    {
+      ...I18nModule.forRoot({
+        fallbackLanguage: 'en',
+        loaderOptions: {
+          path: 'src/resources/i18n/',
+          watch: true,
+        },
+        resolvers: [
+          { use: QueryResolver, options: ['lang'] },
+          AcceptLanguageResolver,
+          new HeaderResolver(['x-lang']),
+        ],
+      }),
+      global: true,
+    },
     MikroOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => config.get('database'),

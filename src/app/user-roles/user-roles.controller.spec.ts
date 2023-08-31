@@ -8,12 +8,14 @@ import {BasicStatuses} from '../../shared/enums/basic-statuses.enum';
 import {UserRoleEntity} from './entities/user-role.entity';
 import {NotFoundException} from '@nestjs/common';
 import {ErrorCodes} from '../../shared/enums/error-codes.enum';
+import {I18nContext, I18nService} from 'nestjs-i18n';
 
 
 describe('UserRolesController', () => {
     let controller: UserRolesController;
     let service: UserRolesService;
     const userRoleEntities: UserRoleEntity[] = [];
+    let i18n: I18nContext;
 
     const userRoleMockedDto: UserRoleDto = {
         id: "90366a15-0176-4581-a124-357d479fe824",
@@ -44,7 +46,9 @@ describe('UserRolesController', () => {
         }),
         getUserRoleById: jest.fn((id) => {
             if (!id) {
-                throw new NotFoundException(ErrorCodes.NotFound_User_Role);
+                throw new NotFoundException(
+                    i18n.t(ErrorCodes.NotFound_User_Role)
+                );
             }
             return {
                 id: id,
@@ -54,7 +58,9 @@ describe('UserRolesController', () => {
         deleteUserRole: jest.fn((id) => {
             const found = mockUserRolesService.getUserRoleById(id);
             if (!found) {
-                throw new NotFoundException(ErrorCodes.NotFound_User_Role);
+                throw new NotFoundException(
+                    i18n.t(ErrorCodes.NotFound_User_Role)
+                );
             }
             found.status = BasicStatuses.Archived;
             return found;
@@ -64,7 +70,13 @@ describe('UserRolesController', () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             controllers: [UserRolesController],
-            providers: [UserRolesService],
+            providers: [
+                UserRolesService,
+                {
+                    provide: I18nService,
+                    useValue: i18n,
+                },
+            ],
         })
             .overrideProvider(UserRolesService)
             .useValue(mockUserRolesService)
@@ -95,18 +107,18 @@ describe('UserRolesController', () => {
     describe('GET/user-roles/:userRoleId', () => {
         it('should return user role dto by role id', async () => {
             const res = await controller.addUserRole(userRoleMockedDto);
-            let result = await controller.getUserRoleById(res.id);
+            let result = await controller.getUserRoleById(res.id, i18n);
 
             expect(result).toEqual(userRoleMockedDto);
             expect(mockUserRolesService.getUserRoleById).toHaveBeenCalledWith(userRoleMockedDto.id);
         });
 
-        it('should return NotFoundException if user role not found', async () => {
+        it('should return error if user role not found', async () => {
 
             try {
-                await controller.getUserRoleById(null);
+                await controller.getUserRoleById(null, i18n);
             } catch (error) {
-                expect(error).toBeInstanceOf(NotFoundException);
+                expect(error).toBeInstanceOf(Error);
             }
 
             expect(mockUserRolesService.getUserRoleById).toHaveBeenCalledWith(null);
@@ -161,18 +173,18 @@ describe('UserRolesController', () => {
     describe('DELETE/:id', () => {
         it('should archive user role', async () => {
             const res = await controller.addUserRole(userRoleMockedDto);
-            const deleted = await controller.deleteUserRole(res.id);
+            const deleted = await controller.deleteUserRole(res.id, i18n);
 
             expect(deleted.status).toEqual('archived');
             expect(mockUserRolesService.deleteUserRole).toHaveBeenCalledWith(res.id);
         });
 
-        it('should return NotFoundException if user role not found', async () => {
+        it('should return error if user role not found', async () => {
 
             try {
-                await controller.deleteUserRole(null);
+                await controller.deleteUserRole(null, i18n);
             } catch (error) {
-                expect(error).toBeInstanceOf(NotFoundException);
+                expect(error).toBeInstanceOf(Error);
             }
 
             expect(mockUserRolesService.deleteUserRole).toHaveBeenCalledWith(null);

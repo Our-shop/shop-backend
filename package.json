@@ -106,10 +106,21 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.{js,jsx,ts,tsx}",
+      "!<rootDir>/src/app/auth/auth.module.ts",
+      "!<rootDir>/src/main.ts",
+      "!<rootDir>/src/app.module.ts",
+      "!**/*.test.{js,jsx,ts,tsx}",
+      "!**/node_modules/**",
+      "!**/coverage/**"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/src/app/auth/auth.module.ts",
+      "./src/main.ts",
+      "./src/app.module.ts"
+    ]
   },
   "mikro-orm": {
     "useTsNode": true,
