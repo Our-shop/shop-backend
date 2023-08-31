@@ -1,7 +1,7 @@
 import {BasicDto} from '../../../shared/dto/basic.dto';
 import {ApiProperty} from '@nestjs/swagger';
 import {UserRoles} from '../enums/user-roles.enum';
-import {IsArray, IsEnum, ValidateNested} from 'class-validator';
+import {IsArray, IsEnum} from 'class-validator';
 import {UserPermissions} from '../enums/user-permissions.enum';
 import {UserRoleEntity} from '../entities/user-role.entity';
 
@@ -50,3 +50,5 @@ export class UserRoleDto extends BasicDto {
         return entities.map(entity => this.fromEntity(entity));
     }
 }
+
+

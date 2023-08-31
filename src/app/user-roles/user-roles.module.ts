@@ -11,7 +11,7 @@ import {UserRoleRepo} from './repos/user-role.repo';
             entities: [UserRoleEntity],
         }),
     ],
-    providers: [UserRolesService],
+    providers: [UserRolesService, UserRoleRepo],
     controllers: [UserRolesController]
 })
 export class UserRolesModule {}

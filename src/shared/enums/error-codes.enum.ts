@@ -16,4 +16,6 @@ export enum ErrorCodes {
   NotCorrect_Password = 'errors.not-correct.password',
 
   InvalidTokens = 'errors.invalid-tokens',
+
+  NotFound_User_Role = 'errors.not-found.user-role'
 }

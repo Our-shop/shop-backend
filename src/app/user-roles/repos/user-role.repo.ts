@@ -1,10 +1,8 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
-import {EntityManager, EntityRepository} from '@mikro-orm/postgresql';
-import {UserRoleEntity} from '../entities/user-role.entity';
-import {BasicStatuses} from '../../../shared/enums/basic-statuses.enum';
-import {UserRoleDto} from '../dtos/user-role.dto';
-import {UserEntity} from '../../users/entities/user.entity';
-import {OrderEntity} from '../../orders/entities/order.entity';
+import { Injectable } from '@nestjs/common';
+import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
+import { UserRoleEntity } from '../entities/user-role.entity';
+import { BasicStatuses } from '../../../shared/enums/basic-statuses.enum';
+import { UserRoleDto } from '../dtos/user-role.dto';
 
 @Injectable()
 export class UserRoleRepo extends EntityRepository<UserRoleEntity> {
@@ -31,7 +29,7 @@ export class UserRoleRepo extends EntityRepository<UserRoleEntity> {
 
     async updateUserRole(
         id: string,
-        updateData: Partial<UserRoleEntity>,
+        updateData: Partial<UserRoleDto>,
     ): Promise<UserRoleEntity | null> {
         const userRole = await this.findOne({ id });
         Object.assign(userRole, updateData);
@@ -39,7 +37,7 @@ export class UserRoleRepo extends EntityRepository<UserRoleEntity> {
         return userRole ? userRole : null;
     }
 
-    async deleteUserRole(id: string): Promise<UserRoleEntity | string> {
+    async deleteUserRole(id: string): Promise<UserRoleEntity> {
         const found = await this.findOne({ id });
         found.status = BasicStatuses.Archived;
         await this.entityManager.persistAndFlush(found);
