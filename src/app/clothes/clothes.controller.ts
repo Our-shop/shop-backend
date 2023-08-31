@@ -2,7 +2,6 @@ import { Controller, Get, Post, Param, Body, Put } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ClothesService } from './clothes.service';
 import { ClothesDto } from './dtos/clothes.dto';
-import { ClothesEntity } from './entities/clothes.entity';
 
 @ApiTags('clothes')
 @Controller('clothes')
@@ -27,7 +26,7 @@ export class ClothesController {
 
   @ApiOperation({ summary: 'Add clothes' })
   @Post()
-  public async addFood(@Body() dto: ClothesDto) {
+  public async addClothes(@Body() dto: ClothesDto) {
     const entity = await this.clothesService.addClothes(dto);
 
     return ClothesDto.fromEntity(entity) || null;
@@ -37,7 +36,7 @@ export class ClothesController {
   @Put(':clothesId')
   public async editClothes(
     @Param('clothesId') clothesId: string,
-    @Body() dto: Partial<ClothesEntity>,
+    @Body() dto: Partial<ClothesDto>,
   ) {
     const entity = await this.clothesService.editClothes(clothesId, dto);
 

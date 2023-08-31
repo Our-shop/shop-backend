@@ -2,7 +2,6 @@ import { Controller, Get, Post, Param, Body, Put } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ToysService } from './toys.service';
 import { ToyDto } from './dtos/toy.dto';
-import { ToyEntity } from './entities/toy.entity';
 
 @ApiTags('toys')
 @Controller('toys')
@@ -37,7 +36,7 @@ export class ToysController {
   @Put(':toyId')
   public async editToy(
     @Param('toyId') toyId: string,
-    @Body() dto: Partial<ToyEntity>,
+    @Body() dto: Partial<ToyDto>,
   ) {
     const entity = await this.toysService.editToy(toyId, dto);
 
