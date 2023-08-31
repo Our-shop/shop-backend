@@ -2,7 +2,6 @@ import { Controller, Get, Post, Param, Body, Put } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FoodService } from './food.service';
 import { FoodDto } from './dtos/food.dto';
-import { FoodEntity } from './entities/food.entity';
 
 @ApiTags('food')
 @Controller('food')
@@ -19,7 +18,7 @@ export class FoodController {
 
   @ApiOperation({ summary: 'Get food by id' })
   @Get(':foodId')
-  public async getProductById(@Param('foodId') foodId: string) {
+  public async getFoodById(@Param('foodId') foodId: string) {
     const entity = await this.foodService.getFoodById(foodId);
 
     return FoodDto.fromEntity(entity) || null;
@@ -35,9 +34,9 @@ export class FoodController {
 
   @ApiOperation({ summary: 'Edit food by id' })
   @Put(':foodId')
-  public async editProduct(
+  public async editFood(
     @Param('foodId') foodId: string,
-    @Body() dto: Partial<FoodEntity>,
+    @Body() dto: Partial<FoodDto>,
   ) {
     const entity = await this.foodService.editFood(foodId, dto);
 
