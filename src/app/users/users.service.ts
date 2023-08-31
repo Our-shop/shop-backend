@@ -5,6 +5,7 @@ import { UserEntity } from './entities/user.entity';
 import { OrdersRepo } from '../orders/repos/orders.repo';
 import { OrderItemsRepo } from '../order-items/repos/order-item.repo';
 import { UserSignUpForm } from '../auth/dtos/user-sign-up.form';
+import {UserDto} from './dtos/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -29,11 +30,11 @@ export class UsersService {
     return newUser;
   }
 
-  async updateUser(id: string, updatedUserDto: Partial<UserEntity>) {
+  async updateUser(id: string, updatedUserDto: Partial<UserDto>) {
     return this.userRepo.updateUser(id, updatedUserDto);
   }
 
-  async deleteUser(id: string): Promise<UserEntity | string> {
+  async deleteUser(id: string): Promise<UserEntity> {
     const archivedCart = await this.ordersRepo.archiveCartByUserId(id);
     await this.orderItemsRepo.deleteAllByCartId(archivedCart.id);
 

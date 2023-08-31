@@ -21,7 +21,7 @@ export class ClothesService {
 
   public async editClothes(
     clothesId: string,
-    dto: Partial<ClothesEntity>,
+    dto: Partial<ClothesDto>,
   ): Promise<ClothesEntity> {
     return await this.foodRepo.editOne(clothesId, dto);
   }

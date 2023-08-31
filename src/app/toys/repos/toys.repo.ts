@@ -34,7 +34,7 @@ export class ToysRepo extends EntityRepository<ToyEntity> {
     return newToy;
   }
 
-  public async editOne(id: string, dto: Partial<ToyEntity>): Promise<ToyEntity> {
+  public async editOne(id: string, dto: Partial<ToyDto>): Promise<ToyEntity> {
     const toyToEdit = await this.findOne({ id });
     Object.assign(toyToEdit, dto);
     await this.entityManager.persistAndFlush(toyToEdit);

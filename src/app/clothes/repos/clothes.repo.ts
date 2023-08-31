@@ -36,7 +36,7 @@ export class ClothesRepo extends EntityRepository<ClothesEntity> {
 
   public async editOne(
     id: string,
-    dto: Partial<ClothesEntity>,
+    dto: Partial<ClothesDto>,
   ): Promise<ClothesEntity> {
     const clothesToEdit = await this.findOne({ id: id });
     Object.assign(clothesToEdit, dto);
