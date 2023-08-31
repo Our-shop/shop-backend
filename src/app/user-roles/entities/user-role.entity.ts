@@ -18,9 +18,6 @@ export class UserRoleEntity extends BasicEntity {
     })
     permissions!: UserPermissions[];
 
-    // @Property({ name: 'is_default', type: 'boolean' })
-    // isDefault!: boolean;
-
     @OneToMany(() => UserEntity, (e) => e.role)
     users?: UserEntity[];
 }

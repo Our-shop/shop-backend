@@ -7,6 +7,7 @@ import {UserPermissions} from './enums/user-permissions.enum';
 import {BasicStatuses} from '../../shared/enums/basic-statuses.enum';
 import {UserRoleEntity} from './entities/user-role.entity';
 import {NotFoundException} from '@nestjs/common';
+import {ErrorCodes} from '../../shared/enums/error-codes.enum';
 
 
 describe('UserRolesController', () => {
@@ -43,7 +44,7 @@ describe('UserRolesController', () => {
         }),
         getUserRoleById: jest.fn((id) => {
             if (!id) {
-                throw new NotFoundException(`User role not found`);
+                throw new NotFoundException(ErrorCodes.NotFound_User_Role);
             }
             return {
                 id: id,
@@ -53,7 +54,7 @@ describe('UserRolesController', () => {
         deleteUserRole: jest.fn((id) => {
             const found = mockUserRolesService.getUserRoleById(id);
             if (!found) {
-                throw new NotFoundException(`User role not found`);
+                throw new NotFoundException(ErrorCodes.NotFound_User_Role);
             }
             found.status = BasicStatuses.Archived;
             return found;

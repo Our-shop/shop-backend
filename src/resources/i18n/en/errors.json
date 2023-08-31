@@ -12,5 +12,5 @@
 
   "not-exists.user": "Error! User does not exist",
 
-  "errors.not-found.user-role": "Error! User role not found"
+  "not-found.user-role": "Error! User role not found"
 }
