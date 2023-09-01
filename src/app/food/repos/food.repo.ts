@@ -34,7 +34,7 @@ export class FoodRepo extends EntityRepository<FoodEntity> {
     return newFood;
   }
 
-  public async editOne(id: string, dto: Partial<FoodEntity>): Promise<FoodEntity> {
+  public async editOne(id: string, dto: Partial<FoodDto>): Promise<FoodEntity> {
     const foodToEdit = await this.findOne({ id });
     Object.assign(foodToEdit, dto);
     await this.entityManager.persistAndFlush(foodToEdit);

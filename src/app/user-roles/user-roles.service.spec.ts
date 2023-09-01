@@ -144,7 +144,9 @@ describe('UserRolesService', () => {
             expect(dto).toEqual(userRoleMockedDto);
             expect(mockUserRoleRepo.addUserRole).toHaveBeenCalledWith(userRoleMockedDto);
         })
-    })
+    });
+
+
 
     describe('updateUserRole()', () => {
         it('should update user role by id',async () => {

@@ -29,21 +29,10 @@ describe('UserRolesController', () => {
     const mockUserRolesService = {
         addUserRole: jest.fn(dto => {
             return {
-                id: expect.any(String),
-                created: expect.any(Date),
-                updated: expect.any(Date),
-                status: BasicStatuses.Active,
-                type: dto.type,
-                permissions: dto.permissions,
+               ...dto
             }
         }),
         getAllUserRoles: jest.fn().mockResolvedValue(userRoleEntities),
-        updateUserRole: jest.fn((id, dto) => {
-            return {
-                id,
-                ...dto
-            }
-        }),
         getUserRoleById: jest.fn((id) => {
             if (!id) {
                 throw new NotFoundException(
@@ -54,6 +43,15 @@ describe('UserRolesController', () => {
                 id: id,
                 ...userRoleMockedDto,
             }
+        }),
+        updateUserRole: jest.fn((id, dto) => {
+            const found = mockUserRolesService.getUserRoleById(id);
+            if (!found) {
+                throw new NotFoundException(
+                    i18n.t(ErrorCodes.NotFound_User_Role)
+                );
+            }
+            return Object.assign(found,dto);
         }),
         deleteUserRole: jest.fn((id) => {
             const found = mockUserRolesService.getUserRoleById(id);
@@ -90,13 +88,6 @@ describe('UserRolesController', () => {
         expect(controller).toBeDefined();
     });
 
-    const mockedBasicFields = {
-        id: expect.any(String),
-        created: expect.any(Date),
-        updated: expect.any(Date),
-        status: BasicStatuses.Active,
-    }
-
     describe('GET/user-roles', () => {
         it('should return array of user roles', async () => {
           const result = await controller.getAllUserRoles();
@@ -127,46 +118,23 @@ describe('UserRolesController', () => {
 
     describe('POST/user-roles', () => {
         it('should create user role', async () => {
+            const result = await controller.addUserRole(userRoleMockedDto);
 
-            const userRoleDto: UserRoleDto = {
-                type: UserRoles.Admin,
-                permissions: [UserPermissions.All],
-                id: expect.any(String),
-                created: expect.any(Number),
-                updated: expect.any(Number),
-                status: BasicStatuses.Active,
-            };
-
-            const expectedResponse = {
-                id: expect.any(String),
-                created: expect.any(Date),
-                updated: expect.any(Date),
-                status: 'active',
-                type: 'admin',
-                permissions: ['permissions.all']
-            };
-
-            const result = await controller.addUserRole(userRoleDto);
-            expect(result).toEqual(expectedResponse);
-
-            expect(mockUserRolesService.addUserRole).toHaveBeenCalledWith(userRoleDto);
+            expect(result).toEqual(userRoleMockedDto);
+            expect(mockUserRolesService.addUserRole).toHaveBeenCalledWith(userRoleMockedDto);
         });
     });
 
     describe('POST/:userRoleId', () => {
         it('should edit user role', async () => {
-            const userRoleDto: UserRoleDto = {
-                type: UserRoles.User,
-                permissions: [UserPermissions.All],
-                ...mockedBasicFields,
-            };
+
             const data: Partial<UserRoleDto> = {
                 type: UserRoles.Admin,
             }
-            const res = await controller.updateUserRole(userRoleDto.id, data);
+            const res = await controller.updateUserRole(userRoleMockedDto.id, data);
             expect(res.type).toEqual('admin');
 
-            expect(mockUserRolesService.updateUserRole).toHaveBeenCalledWith(userRoleDto.id, data);
+            expect(mockUserRolesService.updateUserRole).toHaveBeenCalledWith(userRoleMockedDto.id, data);
         });
     });
 

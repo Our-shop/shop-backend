@@ -5,6 +5,7 @@ import { BasicStatuses } from '../../../shared/enums/basic-statuses.enum';
 import { UserSignUpForm } from '../../auth/dtos/user-sign-up.form';
 import { UserRoleRepo } from '../../user-roles/repos/user-role.repo';
 import { UserPermissions } from '../../user-roles/enums/user-permissions.enum';
+import { UserDto } from '../dtos/user.dto';
 
 @Injectable()
 export class UserRepo extends EntityRepository<UserEntity> {
@@ -27,10 +28,6 @@ export class UserRepo extends EntityRepository<UserEntity> {
     return await this.entityManager.findOne(UserEntity,{email: email});
   }
 
-  async getByEmailAndPassword(email: string, password: string) {
-    return await this.entityManager.findOne(UserEntity,{ email, password });
-  }
-
   async getUserPermissions(id: string): Promise<UserPermissions[]> {
     const user = await this.findOne({ id });
     const roleId = user.roleId;
@@ -51,7 +48,7 @@ export class UserRepo extends EntityRepository<UserEntity> {
 
   async updateUser(
     id: string,
-    updateData: Partial<UserEntity>,
+    updateData: Partial<UserDto>,
   ): Promise<UserEntity | null> {
     const user = await this.findOne({ id });
     Object.assign(user, updateData);
@@ -59,7 +56,7 @@ export class UserRepo extends EntityRepository<UserEntity> {
     return user ? user : null;
   }
 
-  async deleteUser(id: string): Promise<UserEntity | string> {
+  async deleteUser(id: string): Promise<UserEntity> {
     const found = await this.findOne({ id });
     found.status = BasicStatuses.Archived;
     await this.entityManager.persistAndFlush(found);

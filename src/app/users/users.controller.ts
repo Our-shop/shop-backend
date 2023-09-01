@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put
@@ -10,7 +11,8 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { UserDto } from './dtos/user.dto';
-import { UserEntity } from './entities/user.entity';
+import { I18n, I18nContext } from 'nestjs-i18n';
+import { ErrorCodes } from '../../shared/enums/error-codes.enum';
 
 @ApiTags('users')
 @Controller('users')
@@ -28,35 +30,50 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Get user by id' })
   @Get('/:userId')
-  async getUserById(@Param('userId') id: string): Promise<UserDto | string> {
-    const entity = await this.usersService.getUserById(id);
-
-    if (!entity) {
-      return `User with id ${id} not found`
+  async getUserById(
+      @Param('userId') id: string,
+      @I18n() i18n: I18nContext
+  ): Promise<UserDto | string> {
+    try {
+      const entity = await this.usersService.getUserById(id);
+      const user = UserDto.fromEntity(entity);
+      return user || null;
+    } catch {
+      throw new NotFoundException(
+          i18n.t(ErrorCodes.NotExists_User)
+      );
     }
-
-    const user = UserDto.fromEntity(entity);
-    return user || null;
   }
 
   @ApiOperation({ summary: 'Add user' })
   @Post()
-  async addUser(@Body() newUser: UserDto): Promise<UserEntity> {
-    return this.usersService.addUser(newUser);
+  async addUser(@Body() newUser: UserDto): Promise<UserDto> {
+    const res = await this.usersService.addUser(newUser);
+
+    return UserDto.fromEntity(res);
   }
 
   @ApiOperation({ summary: 'Edit user' })
   @Put('/:userId')
   async updateUser(
     @Param('userId') id: string,
-    @Body() updatedUserDto: Partial<UserEntity>,
-  ) {
-    return this.usersService.updateUser(id, updatedUserDto);
+    @Body() updatedUserDto: Partial<UserDto>,
+  ): Promise<UserDto> {
+    const res = await this.usersService.updateUser(id, updatedUserDto);
+    return UserDto.fromEntity(res);
   }
 
   @ApiOperation({ summary: 'Archive user by id' })
   @Delete('/:userId')
-  async deleteUser(@Param('userId') id: string): Promise<UserEntity | string> {
-    return this.usersService.deleteUser(id);
+  async deleteUser(
+      @Param('userId') id: string,
+      @I18n() i18n: I18nContext
+  ): Promise<UserDto> {
+    try {
+      const res = await this.usersService.deleteUser(id);
+      return UserDto.fromEntity(res);
+    } catch {
+        throw new NotFoundException(i18n.t(ErrorCodes.NotExists_User))
+    }
   }
 }

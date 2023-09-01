@@ -10,7 +10,6 @@ import {ErrorCodes} from '../../shared/enums/error-codes.enum';
 export class UserRolesController {
     constructor(
         private readonly userRolesService: UserRolesService,
-        private readonly i18n: I18nService,
     ) {}
 
     @ApiOperation({ summary: 'Get all user roles' })
@@ -52,8 +51,9 @@ export class UserRolesController {
     async updateUserRole(
         @Param('userRoleId') id: string,
         @Body() updatedUserRoleDto: Partial<UserRoleDto>,
-    ) {
-        return this.userRolesService.updateUserRole(id, updatedUserRoleDto);
+    ): Promise<UserRoleDto> {
+        const role = await this.userRolesService.updateUserRole(id, updatedUserRoleDto);
+        return UserRoleDto.fromEntity(role);
     }
 
     @ApiOperation({ summary: 'Archive user role by id' })
