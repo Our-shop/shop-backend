@@ -14,5 +14,9 @@
 
   "not-found.user-role": "Error! User role not found",
 
-  "not-found.product" : "Error! Product not found"
+  "not-found.product" : "Error! Product not found",
+
+  "not-found.delivery" : "Error! Delivery details not found",
+
+  "not-found.user.deliveries" : "Error! User deliveries details not found"
 }

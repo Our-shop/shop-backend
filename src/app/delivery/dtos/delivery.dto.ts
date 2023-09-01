@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { DeliveryEntity } from '../entities/delivery.entity';
 import { IsString } from '@nestjs/class-validator';
 import { ErrorCodes } from '../../../shared/enums/error-codes.enum';
-import { IsMobilePhone, IsUUID } from 'class-validator';
+import { IsUUID } from 'class-validator';
 
 export class DeliveryDto extends BasicDto {
     @ApiProperty({

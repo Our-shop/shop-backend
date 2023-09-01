@@ -19,5 +19,9 @@ export enum ErrorCodes {
 
   NotFound_User_Role = 'errors.not-found.user-role',
 
-  NotFound_Product = 'errors.not-found.product'
+  NotFound_Product = 'errors.not-found.product',
+
+  NotFound_Delivery = 'errors.not-found.delivery',
+
+  NotFound_User_Deliveries = 'errors.not-found.user.deliveries',
 }
