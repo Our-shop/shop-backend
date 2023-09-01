@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Param, Body, Put } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Put, NotFoundException } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ClothesService } from './clothes.service';
 import { ClothesDto } from './dtos/clothes.dto';
+import { I18n, I18nContext } from 'nestjs-i18n';
+import { ErrorCodes } from '../../shared/enums/error-codes.enum';
 
 @ApiTags('clothes')
 @Controller('clothes')
@@ -18,10 +20,20 @@ export class ClothesController {
 
   @ApiOperation({ summary: 'Get clothes by id' })
   @Get(':clothesId')
-  public async getClothesById(@Param('clothesId') clothesId: string) {
-    const entity = await this.clothesService.getClothesById(clothesId);
+  public async getClothesById(
+      @Param('clothesId') clothesId: string,
+      @I18n() i18n: I18nContext
+  ) {
+    try {
+      const entity = await this.clothesService.getClothesById(clothesId);
 
-    return ClothesDto.fromEntity(entity) || null;
+      return ClothesDto.fromEntity(entity) || null;
+    } catch {
+      throw new NotFoundException(
+          i18n.t(ErrorCodes.NotFound_Product)
+      );
+    }
+
   }
 
   @ApiOperation({ summary: 'Add clothes' })

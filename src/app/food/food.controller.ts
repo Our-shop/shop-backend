@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Param, Body, Put } from '@nestjs/common';
+import {Controller, Get, Post, Param, Body, Put, NotFoundException} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FoodService } from './food.service';
 import { FoodDto } from './dtos/food.dto';
+import {I18n, I18nContext} from 'nestjs-i18n';
+import {ErrorCodes} from '../../shared/enums/error-codes.enum';
 
 @ApiTags('food')
 @Controller('food')
@@ -18,10 +20,20 @@ export class FoodController {
 
   @ApiOperation({ summary: 'Get food by id' })
   @Get(':foodId')
-  public async getFoodById(@Param('foodId') foodId: string) {
-    const entity = await this.foodService.getFoodById(foodId);
+  public async getFoodById(
+      @Param('foodId') foodId: string,
+      @I18n() i18n: I18nContext
+  ) {
+    try {
+      const entity = await this.foodService.getFoodById(foodId);
 
-    return FoodDto.fromEntity(entity) || null;
+      return FoodDto.fromEntity(entity) || null;
+    } catch {
+      throw new NotFoundException(
+          i18n.t(ErrorCodes.NotFound_Product)
+      );
+    }
+
   }
 
   @ApiOperation({ summary: 'Add food' })

@@ -17,5 +17,7 @@ export enum ErrorCodes {
 
   InvalidTokens = 'errors.invalid-tokens',
 
-  NotFound_User_Role = 'errors.not-found.user-role'
+  NotFound_User_Role = 'errors.not-found.user-role',
+
+  NotFound_Product = 'errors.not-found.product'
 }
