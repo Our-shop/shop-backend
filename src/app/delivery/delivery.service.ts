@@ -7,15 +7,15 @@ import {DeliveryEntity} from './entities/delivery.entity';
 export class DeliveryService {
     constructor(private readonly deliveryRepo: DeliveryRepo) {}
 
-    async getAllDeliveries(): Promise<DeliveryDto[]> {
+    async getAllDeliveries(): Promise<DeliveryEntity[]> {
         return await this.deliveryRepo.getList();
     }
 
-    async getDeliveryById(id: string): Promise<DeliveryDto | string> {
+    async getDeliveryById(id: string): Promise<DeliveryEntity> {
         return await this.deliveryRepo.getDeliveryById(id);
     }
 
-    async getDeliveriesByUserId(userId: string): Promise<DeliveryDto[] | string> {
+    async getDeliveriesByUserId(userId: string): Promise<DeliveryEntity[]> {
         return await this.deliveryRepo.getDeliveriesByUserId(userId);
     }
 
@@ -23,12 +23,12 @@ export class DeliveryService {
         return await this.deliveryRepo.addDelivery(newDelivery);
     }
 
-    async updateDelivery(id: string, updatedDeliveryDto: Partial<DeliveryEntity>) {
-        return this.deliveryRepo.updateDelivery(id, updatedDeliveryDto);
+    async updateDelivery(id: string, updatedDeliveryDto: Partial<DeliveryDto>) {
+        return await this.deliveryRepo.updateDelivery(id, updatedDeliveryDto);
     }
 
-    async deleteDelivery(id: string): Promise<DeliveryEntity | string> {
-        return this.deliveryRepo.deleteDelivery(id);
+    async deleteDelivery(id: string): Promise<DeliveryEntity> {
+        return await this.deliveryRepo.deleteDelivery(id);
     }
 }
 

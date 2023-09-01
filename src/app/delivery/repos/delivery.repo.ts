@@ -10,28 +10,16 @@ export class DeliveryRepo extends EntityRepository<DeliveryEntity> {
         super(entityManager, DeliveryEntity);
     }
 
-    async getList() {
-        const entities = await this.findAll();
-        const deliveries = DeliveryDto.fromEntities(entities);
-        return deliveries || [];
+    async getList(): Promise<DeliveryEntity[]> {
+        return await this.findAll();
     }
 
-    async getDeliveryById(id: string): Promise<DeliveryDto | string> {
-        const found = await this.findOne({ id });
-        if (!found) {
-            throw new NotFoundException(`Delivery with id: ${id} not found`);
-        }
-        const delivery = DeliveryDto.fromEntity(found);
-        return delivery || null;
+    async getDeliveryById(id: string): Promise<DeliveryEntity> {
+        return await this.findOne({ id });
     }
 
-    async getDeliveriesByUserId(userId: string): Promise<DeliveryDto[]> {
-        const found = await this.find({userId: userId});
-        if (!found) {
-            throw new NotFoundException(`Delivery with user id: ${userId} not found`);
-        }
-        const DeliveryList = DeliveryDto.fromEntities(found);
-        return DeliveryList || null;
+    async getDeliveriesByUserId(userId: string): Promise<DeliveryEntity[]> {
+        return await this.find({userId: userId});
     }
 
     async addDelivery(dto: DeliveryDto): Promise<DeliveryEntity> {
@@ -47,7 +35,7 @@ export class DeliveryRepo extends EntityRepository<DeliveryEntity> {
 
     async updateDelivery(
         id: string,
-        updateData: Partial<DeliveryEntity>,
+        updateData: Partial<DeliveryDto>,
     ): Promise<DeliveryEntity | null> {
         const delivery = await this.findOne({ id });
         Object.assign(delivery, updateData);
@@ -55,7 +43,7 @@ export class DeliveryRepo extends EntityRepository<DeliveryEntity> {
         return delivery ? delivery : null;
     }
 
-    async deleteDelivery(id: string): Promise<DeliveryEntity | string> {
+    async deleteDelivery(id: string): Promise<DeliveryEntity> {
         const found = await this.findOne({ id });
         found.status = BasicStatuses.Archived;
         await this.entityManager.persistAndFlush(found);
