@@ -5,7 +5,7 @@ import { UserEntity } from './entities/user.entity';
 import { OrdersRepo } from '../orders/repos/orders.repo';
 import { OrderItemsRepo } from '../order-items/repos/order-item.repo';
 import { UserSignUpForm } from '../auth/dtos/user-sign-up.form';
-import {UserDto} from './dtos/user.dto';
+import { UserDto } from './dtos/user.dto';
 
 @Injectable()
 export class UsersService {
