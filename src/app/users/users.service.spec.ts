@@ -7,9 +7,6 @@ import {BasicStatuses} from '../../shared/enums/basic-statuses.enum';
 import {Test, TestingModule} from '@nestjs/testing';
 import {getRepositoryToken} from '@mikro-orm/nestjs';
 import {EntityManager} from '@mikro-orm/postgresql';
-import {UserRoleDto} from '../user-roles/dtos/user-role.dto';
-import {UserRoles} from '../user-roles/enums/user-roles.enum';
-import {UserPermissions} from '../user-roles/enums/user-permissions.enum';
 
 describe('UsersService', () => {
     let service: UsersService;

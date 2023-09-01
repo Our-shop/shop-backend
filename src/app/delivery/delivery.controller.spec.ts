@@ -7,7 +7,6 @@ import {BasicStatuses} from '../../shared/enums/basic-statuses.enum';
 import {NotFoundException} from '@nestjs/common';
 import {ErrorCodes} from '../../shared/enums/error-codes.enum';
 import {Test, TestingModule} from '@nestjs/testing';
-import {UserDto} from '../users/dtos/user.dto';
 
 describe('DeliveryController', () => {
     let controller: DeliveryController;
@@ -203,9 +202,5 @@ describe('DeliveryController', () => {
             expect(mockDeliveryService.deleteDelivery).toHaveBeenCalledWith(null);
         });
     });
-
-
-
-
 
 })
