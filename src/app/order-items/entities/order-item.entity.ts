@@ -12,13 +12,13 @@ export class OrderItemEntity extends NoStatusEntity {
   @Property({ name: 'product_id' })
   productId!: string;
 
-  @Property({ name: 'product_quantity' })
+  @Property({ name: 'product_quantity', type: 'integer' })
   productQuantity = 1;
 
   @Property({ name: 'product_title', nullable: true })
   productTitle?: string;
 
-  @Property({ name: 'product_price', nullable: true })
+  @Property({ name: 'product_price', type: 'double', nullable: true })
   productPrice?: number;
 
   @ManyToOne({

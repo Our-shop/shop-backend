@@ -24,7 +24,7 @@ export class OrderEntity extends BasicEntity {
   @Property({ name: 'discount' })
   discount!: number;
 
-  @Property({ name: 'total_amount', nullable: true })
+  @Property({ name: 'total_amount', type: 'double', nullable: true })
   totalAmount?: number;
 
   @ManyToOne({
