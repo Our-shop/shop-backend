@@ -1,36 +1,37 @@
 import { Injectable } from '@nestjs/common';
-import {DeliveryRepo} from './repos/delivery.repo';
-import {DeliveryDto} from './dtos/delivery.dto';
-import {DeliveryEntity} from './entities/delivery.entity';
+import { DeliveryRepo } from './repos/delivery.repo';
+import { DeliveryDto } from './dtos/delivery.dto';
+import { DeliveryEntity } from './entities/delivery.entity';
 
 @Injectable()
 export class DeliveryService {
-    constructor(private readonly deliveryRepo: DeliveryRepo) {}
+  constructor(private readonly deliveryRepo: DeliveryRepo) {}
 
-    async getAllDeliveries(): Promise<DeliveryEntity[]> {
-        return await this.deliveryRepo.getList();
-    }
+  async getAllDeliveries(): Promise<DeliveryEntity[]> {
+    return await this.deliveryRepo.getList();
+  }
 
-    async getDeliveryById(id: string): Promise<DeliveryEntity> {
-        return await this.deliveryRepo.getDeliveryById(id);
-    }
+  async getAllActive(): Promise<DeliveryEntity[]> {
+    return await this.deliveryRepo.getActiveList();
+  }
 
-    async getDeliveriesByUserId(userId: string): Promise<DeliveryEntity[]> {
-        return await this.deliveryRepo.getDeliveriesByUserId(userId);
-    }
+  async getDeliveryById(id: string): Promise<DeliveryEntity> {
+    return await this.deliveryRepo.getDeliveryById(id);
+  }
 
-    async addDelivery(newDelivery: DeliveryDto): Promise<DeliveryEntity> {
-        return await this.deliveryRepo.addDelivery(newDelivery);
-    }
+  async getDeliveriesByUserId(userId: string): Promise<DeliveryEntity[]> {
+    return await this.deliveryRepo.getDeliveriesByUserId(userId);
+  }
 
-    async updateDelivery(id: string, updatedDeliveryDto: Partial<DeliveryDto>) {
-        return await this.deliveryRepo.updateDelivery(id, updatedDeliveryDto);
-    }
+  async addDelivery(newDelivery: DeliveryDto): Promise<DeliveryEntity> {
+    return await this.deliveryRepo.addDelivery(newDelivery);
+  }
 
-    async deleteDelivery(id: string): Promise<DeliveryEntity> {
-        return await this.deliveryRepo.deleteDelivery(id);
-    }
+  async updateDelivery(id: string, updatedDeliveryDto: Partial<DeliveryDto>) {
+    return await this.deliveryRepo.updateDelivery(id, updatedDeliveryDto);
+  }
+
+  async deleteDelivery(id: string): Promise<DeliveryEntity> {
+    return await this.deliveryRepo.deleteDelivery(id);
+  }
 }
-
-
-
