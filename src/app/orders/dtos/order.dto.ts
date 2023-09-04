@@ -3,9 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { OrderEntity } from '../entities/order.entity';
 import { BasicStatuses } from '../../../shared/enums/basic-statuses.enum';
 import { OrderStatuses } from '../enums/order-statuses.enum';
-import {IsString} from '@nestjs/class-validator';
-import {ErrorCodes} from '../../../shared/enums/error-codes.enum';
-import {IsEnum, IsNumber, IsUUID} from 'class-validator';
+import { IsEnum, IsNumber, IsUUID } from 'class-validator';
 
 export class OrderDto extends BasicDto {
   @ApiProperty({
@@ -41,10 +39,14 @@ export class OrderDto extends BasicDto {
   @IsNumber()
   totalAmount?: number;
 
+  @ApiProperty({
+    description: 'Order items list',
+    required: false,
+  })
+  orderItemsQuantity?: number;
+
   static fromEntity(entity?: OrderEntity) {
-    if (!entity) {
-      return;
-    }
+    if (!entity) return;
     const it = new OrderDto();
     it.id = entity.id;
     it.created = entity.created.valueOf();
@@ -55,6 +57,8 @@ export class OrderDto extends BasicDto {
     it.orderStatus = entity.orderStatus;
     it.discount = entity.discount;
     it.totalAmount = entity.totalAmount;
+
+    it.orderItemsQuantity = Array.from(entity.orderItems).length;
 
     return it;
   }

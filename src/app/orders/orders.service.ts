@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { OrdersRepo } from './repos/orders.repo';
 import { OrderEntity } from './entities/order.entity';
 import { OrderItemsRepo } from '../order-items/repos/order-item.repo';
-import { ProductsRepo } from '../../shared/repos/products.repo';
+import { ProductsRepo } from '../products/products.repo';
 import { OrderDto } from './dtos/order.dto';
 import { RefreshTokenRepo } from '../refresh-token/repo/refresh-token.repo';
 import { JwtService } from '@nestjs/jwt';

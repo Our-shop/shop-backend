@@ -13,7 +13,7 @@ export abstract class ProductEntity extends BasicEntity {
   @Property({ name: 'title' })
   title!: string;
 
-  @Property({ name: 'price' })
+  @Property({ name: 'price', type: 'double' })
   price!: number;
 
   @Property({ name: 'description' })

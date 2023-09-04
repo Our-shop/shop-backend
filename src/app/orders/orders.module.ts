@@ -6,7 +6,7 @@ import { OrderEntity } from './entities/order.entity';
 import { OrderItemEntity } from '../order-items/entities/order-item.entity';
 import { OrderItemsRepo } from '../order-items/repos/order-item.repo';
 import { ProductEntity } from '../../shared/entities/product.entity';
-import { ProductsRepo } from '../../shared/repos/products.repo';
+import { ProductsRepo } from '../products/products.repo';
 import { OrdersRepo } from './repos/orders.repo';
 import { RefreshTokenRepo } from '../refresh-token/repo/refresh-token.repo';
 import { JwtService } from '@nestjs/jwt';

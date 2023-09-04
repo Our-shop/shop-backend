@@ -35,7 +35,7 @@ export class OrderItemsController {
 
   @ApiOperation({ summary: 'Get order-items by order-id' })
   @Get('order/:orderId')
-  async getAllByOrderId(@Param('orderItemId') id: string) {
+  async getAllByOrderId(@Param('orderId') id: string) {
     const entities = await this.orderItemsService.getAllByOrderId(id);
 
     return OrderItemDto.fromEntities(entities) || [];
