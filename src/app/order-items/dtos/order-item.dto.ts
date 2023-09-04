@@ -1,9 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { OrderItemEntity } from '../entities/order-item.entity';
 import { NoStatusDto } from '../../../shared/dto/no-status.dto';
-import { IsString } from '@nestjs/class-validator';
-import { ErrorCodes } from '../../../shared/enums/error-codes.enum';
-import {IsNumber, IsUUID} from 'class-validator';
+import { IsUUID } from 'class-validator';
+import { ProductDto } from 'src/shared/dto/product.dto';
 
 export class OrderItemDto extends NoStatusDto {
   @ApiProperty({
@@ -21,23 +20,27 @@ export class OrderItemDto extends NoStatusDto {
 
   @ApiProperty({
     description: 'Product quantity',
+    required: false,
   })
-  @IsNumber()
-  productQuantity!: number;
+  productQuantity?: number;
 
   @ApiProperty({
     description: 'Product title',
     required: false,
   })
-  @IsString({ message: ErrorCodes.FieldShouldBeString })
   productTitle?: string;
 
   @ApiProperty({
     description: 'Product price',
     required: false,
   })
-  @IsNumber()
   productPrice?: number;
+
+  @ApiProperty({
+    description: 'Product',
+    required: false,
+  })
+  product?: ProductDto;
 
   static fromEntity(entity?: OrderItemEntity) {
     if (!entity) {
@@ -52,6 +55,8 @@ export class OrderItemDto extends NoStatusDto {
     it.productQuantity = entity.productQuantity;
     it.productTitle = entity.productTitle;
     it.productPrice = entity.productPrice;
+
+    it.product = ProductDto.fromEntity(entity.product);
 
     return it;
   }

@@ -19,7 +19,7 @@ export class OrderItemsRepo extends EntityRepository<OrderItemEntity> {
   }
 
   public async getAllByOrderId(orderId: string): Promise<OrderItemEntity[]> {
-    return await this.find({ orderId: orderId });
+    return await this.find({ orderId: orderId }, { populate: ['product'] });
   }
 
   public async addOrderItem(dto: OrderItemDto): Promise<OrderItemEntity> {
