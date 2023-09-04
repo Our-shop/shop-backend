@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { ProductsRepo } from '../../shared/repos/products.repo';
+import { ProductsRepo } from './products.repo';
 import { ProductEntity } from '../../shared/entities/product.entity';
 
 @Module({

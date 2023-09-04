@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
-import { ProductEntity } from '../entities/product.entity';
-import { OrderItemEntity } from '../../app/order-items/entities/order-item.entity';
-import { BasicStatuses } from '../enums/basic-statuses.enum';
+import { ProductEntity } from '../../shared/entities/product.entity';
+import { OrderItemEntity } from '../order-items/entities/order-item.entity';
+import { BasicStatuses } from '../../shared/enums/basic-statuses.enum';
 
 @Injectable()
 export class ProductsRepo extends EntityRepository<ProductEntity> {

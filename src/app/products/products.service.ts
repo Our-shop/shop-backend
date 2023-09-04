@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { ProductsRepo } from '../../shared/repos/products.repo';
+import { ProductsRepo } from './products.repo';
 import { ProductEntity } from '../../shared/entities/product.entity';
 
 @Injectable()
 export class ProductsService {
-  constructor(
-    private readonly productsRepo: ProductsRepo,
-  ) {}
+  constructor(private readonly productsRepo: ProductsRepo) {}
 
   public async getAllProducts(): Promise<ProductEntity[]> {
     return await this.productsRepo.getAllProducts();
