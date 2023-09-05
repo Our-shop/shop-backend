@@ -54,7 +54,7 @@ export class OrderItemDto extends NoStatusDto {
     it.productTitle = entity.productTitle;
     it.productPrice = entity.productPrice;
 
-    if (entity.product.status)
+    if (entity.product?.status)
       it.product = ProductDto.fromEntity(entity.product);
 
     return it;
