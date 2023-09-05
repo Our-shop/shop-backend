@@ -15,6 +15,10 @@ export class DeliveryService {
     return await this.deliveryRepo.getActiveList();
   }
 
+  async getActiveByUserId(userId: string): Promise<DeliveryEntity[]> {
+    return await this.deliveryRepo.getActiveByUserId(userId);
+  }
+
   async getDeliveryById(id: string): Promise<DeliveryEntity> {
     return await this.deliveryRepo.getDeliveryById(id);
   }

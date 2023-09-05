@@ -117,9 +117,30 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "coveragePathIgnorePatterns": [
-      "<rootDir>/src/app/auth/auth.module.ts",
       "./src/main.ts",
-      "./src/app.module.ts"
+      "./src/app.module.ts",
+      "/repos",
+      "/entities",
+      "/dtos",
+      "\\.module\\.ts$",
+      "\\.repo\\.ts$",
+      "\\.dto\\.ts$",
+      "\\.enum\\.ts$",
+      "\\.entity\\.ts$",
+      "/redis",
+      "/notifications",
+      "/events",
+      "/config",
+      ".module.ts",
+      ".repo.ts",
+      ".entity.ts",
+      ".dto.ts",
+      ".form.ts",
+      ".enum.ts",
+      ".guard.ts",
+      ".config.ts",
+      ".event.ts",
+      "/migrations/"
     ]
   },
   "mikro-orm": {

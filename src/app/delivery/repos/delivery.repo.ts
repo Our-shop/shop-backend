@@ -18,6 +18,10 @@ export class DeliveryRepo extends EntityRepository<DeliveryEntity> {
     return await this.find({ status: BasicStatuses.Active });
   }
 
+  async getActiveByUserId(userId: string): Promise<DeliveryEntity[]> {
+    return await this.find({ status: BasicStatuses.Active, userId: userId });
+  }
+
   async getDeliveryById(id: string): Promise<DeliveryEntity> {
     return await this.findOne({ id });
   }

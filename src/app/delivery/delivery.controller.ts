@@ -65,6 +65,20 @@ export class DeliveryController {
     }
   }
 
+  @ApiOperation({ summary: 'Get all active deliveries by user id' })
+  @Get('/active/:userId')
+  async getActiveByUserId(
+    @Param('userId') userId: string,
+    @I18n() i18n: I18nContext,
+  ): Promise<DeliveryDto[]> {
+    try {
+      const found = await this.deliveryService.getActiveByUserId(userId);
+      return DeliveryDto.fromEntities(found);
+    } catch {
+      throw new NotFoundException(i18n.t(ErrorCodes.NotFound_User_Deliveries));
+    }
+  }
+
   @ApiOperation({ summary: 'Add delivery' })
   @Post()
   async addDelivery(@Body() newDelivery: DeliveryDto): Promise<DeliveryDto> {
