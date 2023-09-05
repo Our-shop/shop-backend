@@ -20,7 +20,7 @@ export class OrderItemsService {
   }
 
   public async addOrderItem(dto: OrderItemDto): Promise<OrderItemEntity> {
-    return this.orderItemsRepo.addOrderItem(dto);
+    return await this.orderItemsRepo.addOrderItem(dto);
   }
 
   public async editProductQuantity(
@@ -31,10 +31,10 @@ export class OrderItemsService {
   }
 
   public async deleteOrderItem(id: string): Promise<OrderItemEntity> {
-    return this.orderItemsRepo.deleteOrderItem(id);
+    return await this.orderItemsRepo.deleteOrderItem(id);
   }
 
   public async deleteAllByCartId(orderId: string): Promise<OrderItemEntity[]> {
-    return this.orderItemsRepo.deleteAllByCartId(orderId);
+    return await this.orderItemsRepo.deleteAllByCartId(orderId);
   }
 }
