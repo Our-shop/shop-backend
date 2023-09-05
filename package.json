@@ -119,7 +119,18 @@
     "coveragePathIgnorePatterns": [
       "<rootDir>/src/app/auth/auth.module.ts",
       "./src/main.ts",
-      "./src/app.module.ts"
+      "./src/app.module.ts",
+      ".module.ts",
+      ".repo.ts",
+      ".entity.ts",
+      ".dto.ts",
+      ".form.ts",
+      ".enum.ts",
+      ".guard.ts",
+      ".config.ts",
+      ".event.ts",
+      "/migrations/",
+      "/redis/"
     ]
   },
   "mikro-orm": {

@@ -43,9 +43,7 @@ export class OrderItemDto extends NoStatusDto {
   product?: ProductDto;
 
   static fromEntity(entity?: OrderItemEntity) {
-    if (!entity) {
-      return;
-    }
+    if (!entity) return;
     const it = new OrderItemDto();
     it.id = entity.id;
     it.created = entity.created.valueOf();
@@ -56,7 +54,8 @@ export class OrderItemDto extends NoStatusDto {
     it.productTitle = entity.productTitle;
     it.productPrice = entity.productPrice;
 
-    it.product = ProductDto.fromEntity(entity.product);
+    if (entity.product.status)
+      it.product = ProductDto.fromEntity(entity.product);
 
     return it;
   }
