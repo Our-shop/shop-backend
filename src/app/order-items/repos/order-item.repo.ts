@@ -34,9 +34,9 @@ export class OrderItemsRepo extends EntityRepository<OrderItemEntity> {
 
   public async editProductQuantity(
     id: string,
-    dto: Partial<OrderItemEntity>,
+    dto: Partial<OrderItemDto>,
   ): Promise<OrderItemEntity> {
-    const itemToEdit = await this.findOne({ id });
+    const itemToEdit = await this.findOne({ id }, { populate: ['product'] });
     itemToEdit.productQuantity = dto.productQuantity;
     await this.entityManager.persistAndFlush(itemToEdit);
 

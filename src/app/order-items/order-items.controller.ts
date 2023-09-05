@@ -10,7 +10,6 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { OrderItemsService } from './order-items.service';
 import { OrderItemDto } from './dtos/order-item.dto';
-import { OrderItemEntity } from './entities/order-item.entity';
 
 @ApiTags('order-items')
 @Controller('order-items')
@@ -53,20 +52,26 @@ export class OrderItemsController {
   @Put(':orderItemId')
   async EditProductQuantity(
     @Param('orderItemId') id: string,
-    @Body() dto: Partial<OrderItemEntity>,
+    @Body() dto: Partial<OrderItemDto>,
   ) {
-    return this.orderItemsService.editProductQuantity(id, dto);
+    const entity = await this.orderItemsService.editProductQuantity(id, dto);
+
+    return OrderItemDto.fromEntity(entity) || null;
   }
 
   @ApiOperation({ summary: 'Delete order item by id' })
   @Delete(':orderItemId')
   async deleteOrderItem(@Param('orderItemId') id: string) {
-    return this.orderItemsService.deleteOrderItem(id);
+    const entity = await this.orderItemsService.deleteOrderItem(id);
+
+    return OrderItemDto.fromEntity(entity) || null;
   }
 
   @ApiOperation({ summary: 'Delete order-items by cart-id' })
   @Delete('cart/:cartId')
   async deleteAllByCartId(@Param('cartId') id: string) {
-    return this.orderItemsService.deleteAllByCartId(id);
+    const entities = await this.orderItemsService.deleteAllByCartId(id);
+
+    return OrderItemDto.fromEntities(entities) || null;
   }
 }

@@ -25,9 +25,9 @@ export class OrderItemsService {
 
   public async editProductQuantity(
     id: string,
-    dto: Partial<OrderItemEntity>,
+    dto: Partial<OrderItemDto>,
   ): Promise<OrderItemEntity> {
-    return this.orderItemsRepo.editProductQuantity(id, dto);
+    return await this.orderItemsRepo.editProductQuantity(id, dto);
   }
 
   public async deleteOrderItem(id: string): Promise<OrderItemEntity> {
