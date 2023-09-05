@@ -1,6 +1,13 @@
 import { BasicDto } from '../../../shared/dto/basic.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsUUID, Matches, MaxLength, MinLength, IsEmail } from 'class-validator';
+import {
+  IsString,
+  IsUUID,
+  Matches,
+  MaxLength,
+  MinLength,
+  IsEmail,
+} from 'class-validator';
 import { ErrorCodes } from '../../../shared/enums/error-codes.enum';
 import { UserEntity } from '../entities/user.entity';
 
@@ -18,14 +25,14 @@ export class UserDto extends BasicDto {
   @MinLength(6)
   @MaxLength(20)
   @Matches(
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9!@#$%^&*()_+])[A-Za-z0-9!@#$%^&*()_+]+$/,
-      {
-        message:
-            'Password should contain at least 6 characters including:' +
-            '* 1 Uppercase letter, ' +
-            '* 1 Lowercase letter,  ' +
-            '* 1 number or special character',
-      },
+    /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9!@#$%^&*()_+])[A-Za-z0-9!@#$%^&*()_+]+$/,
+    {
+      message:
+        'Password should contain at least 6 characters including:' +
+        '* 1 Uppercase letter, ' +
+        '* 1 Lowercase letter,  ' +
+        '* 1 number or special character',
+    },
   )
   password!: string;
 
@@ -41,11 +48,6 @@ export class UserDto extends BasicDto {
   @IsUUID()
   roleId!: string;
 
-  // @ApiProperty({
-  //   description: 'User refresh token',
-  // })
-  // refreshToken?: string;
-
   static fromEntity(entity?: UserEntity) {
     if (!entity) {
       return;
@@ -59,8 +61,6 @@ export class UserDto extends BasicDto {
     it.userName = entity.userName;
     it.password = entity.password;
     it.email = entity.email;
-    // it.refreshToken = entity.refreshToken;
-
 
     return it;
   }

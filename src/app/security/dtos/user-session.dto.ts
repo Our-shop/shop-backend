@@ -5,21 +5,12 @@ import { UserPermissions } from 'src/app/user-roles/enums/user-permissions.enum'
 // ============ entities =============
 import { UserEntity } from 'src/app/users/entities/user.entity';
 
-
 export class UserSessionDto {
   @IsUUID()
   id: string;
 
   @IsEmail()
   email: string;
-
-  // @ApiProperty({
-  //   description: "User role type",
-  //   isArray: false,
-  //   enum: UserRoles
-  // })
-  // @IsEnum(UserRoles)
-  // type: UserRoles;
 
   @IsUUID()
   role_id: string;
@@ -35,7 +26,6 @@ export class UserSessionDto {
       id: dto.id,
       email: dto.email,
       role_id: dto.role_id,
-      // type: dto.type,
       permissions: dto.permissions,
     };
   }
@@ -48,7 +38,6 @@ export class UserSessionDto {
       id: entity.id,
       email: entity.email,
       role_id: entity.roleId,
-      // role: entity.role,
       permissions,
     };
   }
