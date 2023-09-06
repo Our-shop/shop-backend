@@ -52,7 +52,6 @@ export class AuthService {
   }
 
   async resetPassword(user: UserEntity, newPassword: string): Promise<void> {
-    const updatedPassword = await this.securityService.hashData(newPassword);
-    await this.userRepo.updateUser(user.id, { password: updatedPassword });
+    await this.userRepo.updateUser(user.id, { password: newPassword });
   }
 }
