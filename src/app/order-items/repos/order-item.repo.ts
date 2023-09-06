@@ -29,7 +29,10 @@ export class OrderItemsRepo extends EntityRepository<OrderItemEntity> {
     });
     await this.entityManager.persistAndFlush(newOrderItem);
 
-    return newOrderItem;
+    return await this.findOne(
+      { id: newOrderItem.id },
+      { populate: ['product'] },
+    );
   }
 
   public async editProductQuantity(

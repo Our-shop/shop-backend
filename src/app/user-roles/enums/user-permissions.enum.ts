@@ -1,11 +1,12 @@
 export enum UserPermissions {
-    All = 'permissions.all',
-    RefreshToken = 'permissions.auth.refresh-token',
-    SignOut = 'permissions.auth.sign-out',
-    Restricted = 'permissions.restricted',
-    Guest = 'permissions.guest',
+  All = 'permissions.all',
+  User = 'permissions.user',
 
-    // ============== users ==========
-    GetUsers = 'permissions.users.get-users',
-    GetUserInfo = 'permissions.users.get-user-info',
+  Cart = 'permissions.cart',
+  UserProfile = 'permission.user-profile',
+  UserEdit = 'permissions.user-edit',
+  OrdersHistory = 'prmissions.orders-history',
+  ChangePasswod = 'permissions.change-password',
+
+  SignOut = 'permissions.auth.sign-out',
 }
