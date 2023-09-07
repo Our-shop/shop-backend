@@ -8,7 +8,7 @@ import {NoStatusEntity} from '../../../shared/entities/no-status.entity';
   customRepository: () => RefreshTokenRepo,
 })
 export class RefreshTokenEntity extends NoStatusEntity {
-  @Property({ name: 'Refresh_token', length: 500})
+  @Property({ name: 'Refresh_token', length: 1000})
   refresh_token!: string;
 
   @ManyToOne(() => UserEntity)
