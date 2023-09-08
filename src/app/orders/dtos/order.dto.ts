@@ -9,7 +9,6 @@ export class OrderDto extends BasicDto {
   @ApiProperty({
     description: 'User id',
   })
-  @IsUUID()
   userId!: string;
 
   @ApiProperty({
@@ -23,20 +22,17 @@ export class OrderDto extends BasicDto {
     description: 'Order status',
     enum: BasicStatuses,
   })
-  @IsEnum(OrderStatuses)
   orderStatus!: OrderStatuses;
 
   @ApiProperty({
     description: 'Discount',
   })
-  @IsNumber()
   discount!: number;
 
   @ApiProperty({
     description: 'Total amount',
     required: false,
   })
-  @IsNumber()
   totalAmount?: number;
 
   @ApiProperty({
