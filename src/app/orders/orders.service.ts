@@ -30,7 +30,11 @@ export class OrdersService {
     return await this.ordersRepo.getOrdersByUserId(userId);
   }
 
-  public async makeOrder(dto: OrderDto): Promise<OrderEntity | string> {
+  public async makeOrder(
+    id: string,
+    dto: OrderDto,
+  ): Promise<OrderEntity | string> {
+    dto.id = id;
     const orderItems = await this.orderItemsRepo.getAllByOrderId(dto.id);
     const products = await this.productsRepo.getLackingProducts(orderItems);
 

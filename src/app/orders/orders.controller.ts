@@ -48,9 +48,9 @@ export class OrdersController {
   }
 
   @ApiOperation({ summary: 'Make order from cart' })
-  @Post('orders')
-  public async makeOrder(@Body() dto: OrderDto) {
-    const result = await this.ordersService.makeOrder(dto);
+  @Post('orders/:cartId')
+  public async makeOrder(@Param('cartId') id: string, @Body() dto: OrderDto) {
+    const result = await this.ordersService.makeOrder(id, dto);
 
     return typeof result === 'string'
       ? result
