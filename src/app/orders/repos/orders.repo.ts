@@ -26,7 +26,10 @@ export class OrdersRepo extends EntityRepository<OrderEntity> {
   }
 
   public async getOrdersByUserId(userId: string): Promise<OrderEntity[]> {
-    return await this.find({ userId, orderStatus: OrderStatuses.InOrder });
+    return await this.find(
+      { userId, orderStatus: OrderStatuses.InOrder },
+      { populate: ['orderItems'] },
+    );
   }
 
   public async makeOrder(dto: OrderDto): Promise<OrderEntity> {

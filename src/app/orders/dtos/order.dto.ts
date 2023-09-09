@@ -4,6 +4,7 @@ import { OrderEntity } from '../entities/order.entity';
 import { BasicStatuses } from '../../../shared/enums/basic-statuses.enum';
 import { OrderStatuses } from '../enums/order-statuses.enum';
 import { IsEnum, IsNumber, IsUUID } from 'class-validator';
+import { OrderItemDto } from 'src/app/order-items/dtos/order-item.dto';
 
 export class OrderDto extends BasicDto {
   @ApiProperty({
@@ -36,10 +37,16 @@ export class OrderDto extends BasicDto {
   totalAmount?: number;
 
   @ApiProperty({
-    description: 'Order items list',
+    description: 'Order items quantity',
     required: false,
   })
   orderItemsQuantity?: number;
+
+  @ApiProperty({
+    description: 'Order items list',
+    required: false,
+  })
+  orderItems?: OrderItemDto[];
 
   static fromEntity(entity?: OrderEntity) {
     if (!entity) return;
@@ -55,6 +62,7 @@ export class OrderDto extends BasicDto {
     it.totalAmount = entity.totalAmount;
 
     it.orderItemsQuantity = Array.from(entity.orderItems).length;
+    it.orderItems = OrderItemDto.fromEntities(Array.from(entity.orderItems));
 
     return it;
   }
