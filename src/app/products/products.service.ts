@@ -14,6 +14,10 @@ export class ProductsService {
     return await this.productsRepo.getAllActiveProducts();
   }
 
+  public async searchActiveProducts(query: string): Promise<ProductEntity[]> {
+    return await this.productsRepo.searchActiveProducts(query);
+  }
+
   public async archiveOneProduct(id: string): Promise<ProductEntity> {
     return await this.productsRepo.archiveOneProduct(id);
   }

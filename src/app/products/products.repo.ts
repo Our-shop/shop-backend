@@ -18,6 +18,27 @@ export class ProductsRepo extends EntityRepository<ProductEntity> {
     return await this.find({ status: BasicStatuses.Active });
   }
 
+  public async searchActiveProducts(query: string): Promise<ProductEntity[]> {
+    const queryLower = query.toLocaleLowerCase();
+    const entities = await this.find({ status: BasicStatuses.Active });
+
+    return entities.filter(
+      (entity) =>
+        entity.title.toLowerCase().includes(queryLower) ||
+        entity.description.toLowerCase().includes(queryLower) ||
+        entity.category.toLowerCase().includes(queryLower) ||
+        entity.type.toLowerCase().includes(queryLower),
+    );
+    // return await this.find({
+    //   $or: [
+    //     { title: { $ilike: `%${query}` } },
+    //     { description: { $ilike: `%${query}` } },
+    //     { category: { $ilike: `%${query}` } },
+    //     { type: { $ilike: `%${query}` } },
+    //   ],
+    // });
+  }
+
   public async archiveOneProduct(id: string): Promise<ProductEntity> {
     const productToArchive = await this.findOne({ id });
     productToArchive.status = BasicStatuses.Archived;
