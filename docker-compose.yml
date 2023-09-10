@@ -19,7 +19,17 @@ services:
       - .env
     volumes:
       - pgadmin-data:/var/lib/pgadmin
+  redis:
+    image: redis
+    env_file:
+      - .env
+    ports:
+      - '6379:6379'
+    volumes:
+      - ./redis/data:/data
+
 
 volumes:
   local_pgdata:
   pgadmin-data:
+  redis:

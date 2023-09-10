@@ -1,0 +1,22 @@
+{
+  "invalid-form": "Ошибка! Форма заполнена некорректно",
+
+  "field-invalid.should-be-string": "Ошибка! Поле должно быть строкой",
+  "field-invalid.should-be-number": "Ошибка! Поле должно быть числом",
+  "field-invalid.should-be-enum": "Ошибка! Поле должно быть правильным enum",
+  "field-invalid.should-be-email": "Ошибка! Поле должно быть почтой",
+
+  "not-authorized.request": "Ошибка! Необходимо авторизоваться",
+
+  "invalid-status.user-inactive": "Ошибка! Пользователь неактивен",
+
+  "not-exists.user": "Ошибка! Пользователь не существует",
+
+  "not-found.user-role": "Ошибка! Роль пользователя не найдена",
+
+  "not-found.product" : "Ошибка! Продукт не найден",
+
+  "not-found.delivery" : "Ошибка! Детали доставки не найдены",
+
+  "not-found.user.deliveries" : "Ошибка! Детали доставок пользователя не найдены"
+}

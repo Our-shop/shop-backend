@@ -11,4 +11,20 @@ export enum ErrorCodes {
   InvalidStatus_UserInactive = 'errors.invalid-status.user-inactive',
 
   NotExists_User = 'errors.not-exists.user',
+  Exists_User = 'errors.already-exists.user',
+
+  NotCorrect_Password = 'errors.not-correct.password',
+
+  InvalidTokens = 'errors.invalid-tokens',
+
+  NotFound_User_Role = 'errors.not-found.user-role',
+
+  NotFound_Product = 'errors.not-found.product',
+
+  NotFound_Order = 'errors.not-found.order',
+  NotFound_Cart = 'errors.not-found.cart',
+
+  NotFound_Delivery = 'errors.not-found.delivery',
+
+  NotFound_User_Deliveries = 'errors.not-found.user.deliveries',
 }

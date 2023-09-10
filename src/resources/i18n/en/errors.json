@@ -1,0 +1,22 @@
+{
+  "invalid-form": "Error! Invalid form",
+
+  "field-invalid.should-be-string": "Error! Field should be a string",
+  "field-invalid.should-be-number": "Error! Field should be a number",
+  "field-invalid.should-be-enum": "Error! Field should be a correct enum",
+  "field-invalid.should-be-email": "Error! Field should be an email",
+
+  "not-authorized.request": "Error! Get authorized first",
+
+  "invalid-status.user-inactive": "Error! User is inactive",
+
+  "not-exists.user": "Error! User does not exist",
+
+  "not-found.user-role": "Error! User role not found",
+
+  "not-found.product" : "Error! Product not found",
+
+  "not-found.delivery" : "Error! Delivery details not found",
+
+  "not-found.user.deliveries" : "Error! User deliveries details not found"
+}
