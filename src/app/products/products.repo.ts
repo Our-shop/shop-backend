@@ -29,14 +29,6 @@ export class ProductsRepo extends EntityRepository<ProductEntity> {
         entity.category.toLowerCase().includes(queryLower) ||
         entity.type.toLowerCase().includes(queryLower),
     );
-    // return await this.find({
-    //   $or: [
-    //     { title: { $ilike: `%${query}` } },
-    //     { description: { $ilike: `%${query}` } },
-    //     { category: { $ilike: `%${query}` } },
-    //     { type: { $ilike: `%${query}` } },
-    //   ],
-    // });
   }
 
   public async archiveOneProduct(id: string): Promise<ProductEntity> {

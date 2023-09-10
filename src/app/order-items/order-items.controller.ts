@@ -50,7 +50,7 @@ export class OrderItemsController {
 
   @ApiOperation({ summary: 'Edit product quantity' })
   @Put(':orderItemId')
-  async EditProductQuantity(
+  async editProductQuantity(
     @Param('orderItemId') id: string,
     @Body() dto: Partial<OrderItemDto>,
   ) {

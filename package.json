@@ -129,6 +129,8 @@
       ".config.ts",
       ".event.ts",
       "/migrations/",
+      "/security/",
+      "/notifications/",
       "/redis/"
     ]
   },

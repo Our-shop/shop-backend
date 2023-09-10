@@ -21,6 +21,9 @@ export enum ErrorCodes {
 
   NotFound_Product = 'errors.not-found.product',
 
+  NotFound_Order = 'errors.not-found.order',
+  NotFound_Cart = 'errors.not-found.cart',
+
   NotFound_Delivery = 'errors.not-found.delivery',
 
   NotFound_User_Deliveries = 'errors.not-found.user.deliveries',
