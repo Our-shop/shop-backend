@@ -69,7 +69,7 @@
 10. Once you don't see server create new one: POSTGRES_USER: postgres, POSTGRES_PASSWORD: postgres
 11. Your should find preinstalled initial migrations for user roles and products
 12. Check if you have initial migrations in DB.
-    10 In case you don't find initial migrations you can add initial roles for "user" and "admin" in Swager by link http://localhost:5000/swagger
+In case you don't find initial migrations you can add initial roles for "user" and "admin" in Swager by link http://localhost:5000/swagger
 13. Also add products if necessary
 14. Run back: 'npm run start:dev'
 
