@@ -1,4 +1,4 @@
-import { Reflector } from "@nestjs/core";
+import { Reflector } from '@nestjs/core';
 import {
   Injectable,
   ExecutionContext,
@@ -6,43 +6,48 @@ import {
   UnauthorizedException,
   createParamDecorator,
   CanActivate,
-  SetMetadata
-} from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
-// import { I18nService } from "nestjs-i18n";
+  SetMetadata,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { difference, isEmpty, includes } from "lodash";
+import { difference, isEmpty, includes } from 'lodash';
 
-import { UserPermissions } from "src/app/user-roles/enums/user-permissions.enum";
-import { UserSessionDto } from "src/app/security/dtos/user-session.dto";
-import { ErrorCodes } from "src/shared/enums/error-codes.enum";
-import {RefreshTokenRepo} from '../../refresh-token/repo/refresh-token.repo';
+import { UserPermissions } from 'src/app/user-roles/enums/user-permissions.enum';
+import { UserSessionDto } from 'src/app/security/dtos/user-session.dto';
+import { ErrorCodes } from 'src/shared/enums/error-codes.enum';
+import { RefreshTokenRepo } from '../../refresh-token/repo/refresh-token.repo';
 
-export const RestrictRequest = (...scopes: UserPermissions[]) => SetMetadata("user_permissions", scopes);
+export const RestrictRequest = (...scopes: UserPermissions[]) =>
+  SetMetadata('user_permissions', scopes);
 
-
-export const CurrentUser = createParamDecorator((data: unknown, context: ExecutionContext) => {
-  // const request = ctx.switchToHttp().getRequest();
-  // return request.user as UserSessionDto;
-  const ctx = GqlExecutionContext.create(context);
-  return ctx.getContext().req.user;
-});
+export const CurrentUser = createParamDecorator(
+  (data: unknown, context: ExecutionContext) => {
+    const ctx = GqlExecutionContext.create(context);
+    return ctx.getContext().req.user;
+  },
+);
 
 @Injectable()
-export class JwtPermissionsGuard extends AuthGuard("jwt-strategy") implements CanActivate {
-  protected readonly logger = new Logger("User Permissions Guard");
+export class JwtPermissionsGuard
+  extends AuthGuard('jwt-strategy')
+  implements CanActivate
+{
+  protected readonly logger = new Logger('User Permissions Guard');
 
   protected permissions: UserPermissions[];
 
   constructor(
-      private readonly reflector: Reflector,
-      // private readonly i18n: I18nService
+    private readonly reflector: Reflector, // private readonly i18n: I18nService
   ) {
     super();
   }
 
   canActivate(context: ExecutionContext) {
-    this.permissions = this.reflector.get<UserPermissions[]>("user_permissions", context.getHandler()) || [];
+    this.permissions =
+      this.reflector.get<UserPermissions[]>(
+        'user_permissions',
+        context.getHandler(),
+      ) || [];
     return super.canActivate(context);
   }
 
@@ -50,8 +55,7 @@ export class JwtPermissionsGuard extends AuthGuard("jwt-strategy") implements Ca
   // @ts-ignore
   handleRequest(err: Error, user: UserSessionDto): UserSessionDto {
     if (err || !user) {
-      this.logger.error("User is not authorized to perform request");
-      // throw err || new UnauthorizedException(this.i18n.t(ErrorCodes.NotAuthorizedRequest));
+      this.logger.error('User is not authorized to perform request');
       throw err || new UnauthorizedException(ErrorCodes.NotAuthorizedRequest);
     }
 
@@ -64,8 +68,7 @@ export class JwtPermissionsGuard extends AuthGuard("jwt-strategy") implements Ca
     }
 
     if (difference(this.permissions, user.permissions).length) {
-      this.logger.error("User is not authorized to perform request");
-      // throw new UnauthorizedException(this.i18n.t(ErrorCodes.NotAuthorizedRequest));
+      this.logger.error('User is not authorized to perform request');
       throw new UnauthorizedException(ErrorCodes.NotAuthorizedRequest);
     }
 

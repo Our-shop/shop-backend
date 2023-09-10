@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { OrderItemEntity } from '../entities/order-item.entity';
 import { NoStatusDto } from '../../../shared/dto/no-status.dto';
 import { IsUUID } from 'class-validator';
-import { ProductDto } from 'src/shared/dto/product.dto';
+import { ProductDto } from '../../../shared/dto/product.dto';
 
 export class OrderItemDto extends NoStatusDto {
   @ApiProperty({

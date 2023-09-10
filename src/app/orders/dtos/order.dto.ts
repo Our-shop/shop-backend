@@ -3,8 +3,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { OrderEntity } from '../entities/order.entity';
 import { BasicStatuses } from '../../../shared/enums/basic-statuses.enum';
 import { OrderStatuses } from '../enums/order-statuses.enum';
-import { IsEnum, IsNumber, IsUUID } from 'class-validator';
-import { OrderItemDto } from 'src/app/order-items/dtos/order-item.dto';
+import { IsUUID } from 'class-validator';
+import { OrderItemDto } from '../../order-items/dtos/order-item.dto';
 
 export class OrderDto extends BasicDto {
   @ApiProperty({

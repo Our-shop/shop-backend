@@ -1,11 +1,16 @@
-import { Entity, ManyToOne, OneToMany, Property, Unique } from '@mikro-orm/core';
+import {
+  Entity,
+  ManyToOne,
+  OneToMany,
+  Property,
+  Unique,
+} from '@mikro-orm/core';
 import { UserRepo } from '../repos/user.repo';
 import { BasicEntity } from '../../../shared/entities/basic.entity';
 import { DeliveryEntity } from '../../delivery/entities/delivery.entity';
 import { UserRoleEntity } from '../../user-roles/entities/user-role.entity';
 import { OrderEntity } from '../../orders/entities/order.entity';
 import { RefreshTokenEntity } from '../../refresh-token/entity/refresh-token.entity';
-
 
 @Entity({ tableName: 'users', customRepository: () => UserRepo })
 export class UserEntity extends BasicEntity {
@@ -21,9 +26,6 @@ export class UserEntity extends BasicEntity {
 
   @Property({ name: 'role_id' })
   roleId!: string;
-
-  // @Property({ name: 'refresh_token' })
-  // refreshToken?: string;
 
   @ManyToOne({
     entity: () => UserRoleEntity,
@@ -41,6 +43,6 @@ export class UserEntity extends BasicEntity {
   @OneToMany(() => DeliveryEntity, (e) => e.user)
   deliveries?: DeliveryEntity[];
 
-  @OneToMany(() => RefreshTokenEntity, e => e.user)
+  @OneToMany(() => RefreshTokenEntity, (e) => e.user)
   refreshTokens?: RefreshTokenEntity[];
 }

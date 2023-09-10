@@ -127,12 +127,4 @@ export class AuthController {
     const hashedPassword = await this.securityService.hashData(newPassword);
     await this.authService.resetPassword(user, hashedPassword);
   }
-
-  // @Post('test')
-  // @UseGuards(JwtPermissionsGuard)
-  // @RestrictRequest(UserPermissions.Restricted)
-  // @UseGuards(AuthGuard('jwt-strategy'))
-  // test() {
-  //     return 'protected endpoint';
-  // }
 }
