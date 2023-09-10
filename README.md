@@ -31,7 +31,7 @@
 14. Local storage
 
 ## Database schema:
-![img.png](img.png)
+![image](https://github.com/Our-shop/shop-backend/assets/46794308/edb8b6cc-46e6-485b-ad1c-87074298305f)
 
 ## Description of functionality:
 1. Authentication (Sign-in, Sign up)
