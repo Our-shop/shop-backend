@@ -24,6 +24,14 @@ export class ProductsController {
     return ProductDto.fromEntities(entities) || [];
   }
 
+  @ApiOperation({ summary: 'Search active products' })
+  @Get(':query')
+  public async searchActiveProducts(@Param('query') query: string) {
+    const entities = await this.productsService.searchActiveProducts(query);
+
+    return ProductDto.fromEntities(entities) || [];
+  }
+
   @ApiOperation({ summary: 'Archive one product by id' })
   @Delete(':productId')
   public async archiveOneProduct(@Param('productId') id: string) {
